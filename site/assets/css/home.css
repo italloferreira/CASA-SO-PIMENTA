@@ -339,12 +339,11 @@ main{
 
 .cartoes-section{
     padding-top: 2%;
-    padding-bottom: 2%;
     width: 100%;
     height: 100%;
 
     display: grid;
-    grid-template-columns: repeat(3, 23%);
+    grid-template-columns: repeat(3, 25%);
     justify-content: space-around;
     align-items: center;
     row-gap: 30px;
@@ -364,12 +363,12 @@ main{
 .cartao{
     position: relative;
     width: 100%;
-    height: 80vh;
+    height: 65vh;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     flex-direction: column;
     
 }
@@ -415,7 +414,8 @@ main{
     align-items: center;
     width: 100%;
     height: 10%;
-    font-size: 20px;
+    font-size: 0.8rem;
+    text-align: center;
 }
 
 .cartao-valor{
@@ -433,7 +433,7 @@ main{
 
 .cartao-valor h3{
     padding-left: 5px;
-    font-size: 7vh;
+    font-size: 6vh;
 }
 
 .cartao-produtos{
@@ -481,7 +481,7 @@ main{
     justify-content: space-around;
     align-items: center;
     width: 100%;
-    height: 30%;
+    height: 20%;
 }
 
 .add-carrinho-botao{
