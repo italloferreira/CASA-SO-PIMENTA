@@ -76,8 +76,11 @@ function renderUsers(users) {
     '</tr></thead><tbody>' + rows + '</tbody></table>';
 }
 
+window.loadUsers = loadUsers;
+
 function renderPagination(p) {
   var el = document.getElementById('pagination');
+  if (!el) return;
   if (p.totalPages <= 1) { el.innerHTML = ''; return; }
 
   var html = '<div class="pagination-controls">';
