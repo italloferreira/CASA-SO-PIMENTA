@@ -1,19 +1,66 @@
-# Casa Só Pimenta - E-commerce
+<div align="center">
 
-![Logo Casa Só Pimenta](site/imgs/logo.png)
+# 🌶️ Casa Só Pimenta — E-commerce
 
-Um e-commerce completo para a "Casa Só Pimenta", desenvolvido com **frontend estático (HTML, CSS, JavaScript Vanilla)** e **backend Node.js + Express + PostgreSQL**. O projeto contempla catálogo de produtos e kits, carrinho, autenticação, painel administrativo, integração com Mercado Pago e cotações de frete via Melhor Envio.
+**E-commerce completo desenvolvido com HTML, CSS, JavaScript Vanilla e Node.js**  
+Projeto fullstack com catálogo de produtos e kits, carrinho, autenticação, painel administrativo, pagamentos via Mercado Pago e cálculo de frete com Melhor Envio.
 
-## 🎯 Objetivo do Projeto
+<img src="site/imgs/logo.png" alt="Logo Casa Só Pimenta" width="180">
 
-Este projeto foi desenvolvido para modernizar e digitalizar o processo de vendas da Casa Só Pimenta, oferecendo uma experiência fluida para clientes (navegação, compra, acompanhamento de pedidos) e um painel completo para administração (produtos, kits, pedidos, banners, cupons, configurações e usuários).
+![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
+![HTML](https://img.shields.io/badge/HTML-5-orange)
+![CSS](https://img.shields.io/badge/CSS-3-blue)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow)
+![Node.js](https://img.shields.io/badge/Node.js-%3E%3D18-green)
+![Express](https://img.shields.io/badge/Express-5-blue)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-3372-blue)
+![License](https://img.shields.io/badge/license-ISC-lightgrey)
+
+</div>
+
+---
+
+## 📌 Sobre o projeto
+
+O **Casa Só Pimenta — E-commerce** é uma aplicação fullstack que digitaliza o processo de vendas da Casa Só Pimenta, uma loja de temperos, pimentas e produtos artesanais.
+
+A aplicação foi desenvolvida com **frontend estático** (HTML, CSS e JavaScript puro, sem frameworks) e **backend em Node.js + Express + PostgreSQL**, contemplando:
+
+- catálogo de produtos com filtros, busca e variações por peso;
+- carrinho de compras persistente (autenticado ou anônimo);
+- finalização de pedido com frete e pagamento online;
+- painel administrativo completo (produtos, kits, pedidos, cupons, banners e usuários);
+- integrações com **Mercado Pago**, **Melhor Envio**, **SendGrid** e **Cloudinary**.
+
+---
+
+## 🎯 Objetivo
+
+Este projeto demonstra minha capacidade de desenvolver uma aplicação e-commerce funcional de ponta a ponta, com foco em:
+
+- arquitetura organizada de frontend e backend;
+- API REST com autenticação JWT e boas práticas de segurança;
+- manipulação do DOM e renderização dinâmica sem frameworks;
+- integrações reais de pagamento, frete, e-mail e armazenamento de imagens;
+- testes automatizados com o runner nativo do Node.js.
+
+Mais do que uma loja virtual, o projeto funciona como uma base completa para vendas online da Casa Só Pimenta.
+
+---
+
+## 🌐 Acesso ao projeto
+
+**Projeto online:**  
+[https://www.casasopimenta.com.br](https://www.casasopimenta.com.br)
+
+---
 
 ## ✨ Funcionalidades
 
-### Área do Cliente
+### 🛍️ Área do Cliente
 
 - [x] **Catálogo de produtos** com filtros por categoria, destaque e busca
-- [x] **Detalhes do produto** com imagens, descrição, ingredientes e variações por peso (para produtos a granel)
+- [x] **Detalhes do produto** com imagens, descrição, ingredientes e variações por peso (produtos a granel)
 - [x] **Kits promocionais** com composição detalhada
 - [x] **Carrinho de compras** com persistência (autenticado ou anônimo)
 - [x] **Autenticação** (cadastro, login, recuperação de senha)
@@ -23,20 +70,20 @@ Este projeto foi desenvolvido para modernizar e digitalizar o processo de vendas
 - [x] **Minha conta** (dados cadastrais e endereço)
 - [x] **Cupom de desconto** integrado ao checkout
 
-### Área Administrativa
+### ⚙️ Área Administrativa
 
 - [x] **Dashboard** com métricas de vendas, pedidos e produtos
 - [x] **Gerenciamento de produtos** (CRUD, imagens, estoque, preços, peso)
 - [x] **Gerenciamento de kits** (composição, preço, estoque, destaque)
 - [x] **Gerenciamento de categorias** com cores personalizadas
-- [x] **Gerenciamento de banners** para homepage
+- [x] **Gerenciamento de banners** para a homepage
 - [x] **Gerenciamento de pedidos** com fluxo de status
 - [x] **Gerenciamento de usuários** (clientes e administradores)
 - [x] **Gerenciamento de cupons** (código, desconto, validade, limite de uso)
 - [x] **Configurações do site** (informações, banners, etc.)
-- [x] **Upload de imagens** (localmente na pasta `uploads/` ou via **Cloudinary**)
+- [x] **Upload de imagens** localmente ou via **Cloudinary**
 
-### Integrações & Extras
+### 🔌 Integrações & Extras
 
 - [x] **Cálculo de frete** com Melhor Envio (PAC/SEDEX)
 - [x] **Envio de e-mails** (confirmação de pedido, recuperação de senha) via **SendGrid** ou **Nodemailer**
@@ -48,258 +95,291 @@ Este projeto foi desenvolvido para modernizar e digitalizar o processo de vendas
 - [x] **Máquina de estados** para status de pedidos
 - [x] **Cálculo de peso do carrinho** para otimizar envio
 
-## 🏗️ Arquitetura
-
-```
-CASA-SO-PIMENTA-E-COMMERCE/
-├── site/                    # Frontend estático (HTML/CSS/JS)
-│   ├── assets/             # CSS, JS, imagens gerais
-│   ├── imgs/               # Imagens do site
-│   ├── pages/              # Páginas HTML organizadas por rota
-│   └── test/               # Testes do frontend (node --test)
-├── server/                  # Backend API (Node.js + Express)
-│   ├── src/
-│   │   ├── config/         # Configurações (boxes, cloudinary, orderStatusMachine)
-│   │   ├── controllers/    # Lógica de negócio
-│   │   ├── database/       # Conexão, schema, seed, migrations
-│   │   ├── middlewares/    # Auth, rate limiter
-│   │   ├── routes/         # Rotas da API REST
-│   │   ├── utils/          # Utilitários (cálculo de peso, templates de e-mail)
-│   │   └── server.js       # Entrada da aplicação
-│   ├── data/               # Arquivos auxiliares (se houver)
-│   ├── uploads/            # Uploads locais (fallback)
-│   ├── test/               # Testes do backend (node --test)
-│   ├── .env.example        # Exemplo de variáveis de ambiente
-│   └── package.json
-├── package.json             # Scripts raiz (testes)
-└── README.md
-```
+---
 
 ## 🛠️ Tecnologias Utilizadas
 
 ### Frontend
-- **HTML5** - Estrutura semântica
-- **CSS3** - Estilização com variáveis CSS
-- **JavaScript (Vanilla)** - Sem frameworks, focado em performance
-- **Fetch API** - Comunicação com backend
+
+| Tecnologia | Uso |
+|---|---|
+| **HTML5** | Estrutura semântica |
+| **CSS3** | Estilização com variáveis CSS |
+| **JavaScript (Vanilla)** | Sem frameworks, focado em performance |
+| **Fetch API** | Comunicação com o backend |
 
 ### Backend
-- **Node.js** (>=18) + **Express 5** - API REST
-- **PostgreSQL** (via `pg`) - Banco relacional
-- **JWT (jsonwebtoken)** - Autenticação stateless
-- **bcryptjs** - Hash de senhas
-- **cookie-parser** - Gerenciamento de cookies HTTP-only
-- **helmet** - Headers de segurança
-- **cors** - Controle de origens
-- **express-rate-limit** - Proteção contra brute force
-- **compression** - Otimização de resposta
-- **morgan** - Logging HTTP
+
+| Tecnologia | Uso |
+|---|---|
+| **Node.js** (>=18) + **Express 5** | API REST |
+| **PostgreSQL** (via `pg`) | Banco relacional |
+| **JWT** (`jsonwebtoken`) | Autenticação stateless |
+| **bcryptjs** | Hash de senhas |
+| **cookie-parser** | Cookies HTTP-only |
+| **helmet** | Headers de segurança |
+| **cors** | Controle de origens |
+| **express-rate-limit** | Proteção contra brute force |
+| **compression** | Otimização de resposta |
+| **morgan** | Logging HTTP |
 
 ### Uploads, E-mail e Pagamentos
-- **Cloudinary** + **multer-storage-cloudinary** - Upload de imagens em CDN
-- **Multer** - Upload local (fallback)
-- **SendGrid** (`@sendgrid/mail`) - Envio transacional de e-mails
-- **Nodemailer** - Alternativa para envio de e-mails
-- **Mercado Pago SDK** (`mercadopago`) - Pagamentos online
-- **Melhor Envio API** - Cálculo e integração de frete
+
+| Tecnologia | Uso |
+|---|---|
+| **Cloudinary** + **multer-storage-cloudinary** | Upload de imagens em CDN |
+| **Multer** | Upload local (fallback) |
+| **SendGrid** / **Nodemailer** | Envio transacional de e-mails |
+| **Mercado Pago SDK** | Pagamentos online |
+| **Melhor Envio API** | Cálculo e integração de frete |
 
 ### Dev & Testes
-- **nodemon** - Hot reload em desenvolvimento
-- **node:test** - Testes nativos (sem dependências extras)
-- **dotenv** - Gerenciamento de variáveis de ambiente
 
-## 🔐 Segurança - ATENÇÃO IMPORTANTE
+- **nodemon** — hot reload em desenvolvimento
+- **node:test** — testes nativos (sem dependências extras)
+- **dotenv** — gerenciamento de variáveis de ambiente
 
-Este repositório **NÃO DEVE** conter credenciais reais. Tome as seguintes precauções:
+---
 
-- **Nunca commite o arquivo `.env`**. Utilize sempre o `.env.example` como modelo.
-- **Senhas são hasheadas** com `bcryptjs` (salt 10) antes de serem armazenadas.
-- **JWT** com `JWT_SECRET` forte (gere um valor único/aleatório em produção).
-- **Cookies** para autenticação administrativa. Em produção: `secure: true`, `SameSite` adequado e `HttpOnly`.
-- **Rate limiting** aplicado em rotas sensíveis.
-- **Helmet** habilitado para mitigar XSS, HSTS, CSP e outros.
-- **CORS** restrito por `ALLOWED_ORIGINS`.
-- **Validações** em pedidos, login e cadastro.
-- **Bloqueio temporário** após tentativas falhas de login (anti-brute-force).
-- **Prepared statements** (`$1,$2,...`) via `pg` (proteção SQL Injection).
-- **Upload seguro** com Multer/Cloudinary.
-## ?? Como Rodar Localmente
+## 🏗️ Arquitetura
 
-### Pr�-requisitos
+```
+CASA-SO-PIMENTA-E-COMMERCE/
+├── site/                      # Frontend estático (HTML/CSS/JS)
+│   ├── assets/                # CSS, JS e imagens gerais
+│   ├── imgs/                  # Imagens do site
+│   ├── pages/                 # Páginas HTML organizadas por rota
+│   │   ├── admin/
+│   │   ├── checkout/
+│   │   ├── conta/
+│   │   ├── kits/
+│   │   ├── login/
+│   │   ├── pedidos/
+│   │   ├── produtos/
+│   │   └── ...
+│   └── test/                  # Testes do frontend (node --test)
+├── server/                    # Backend API (Node.js + Express)
+│   ├── src/
+│   │   ├── config/            # Configurações (boxes, cloudinary, orderStatusMachine)
+│   │   ├── controllers/       # Lógica de negócio
+│   │   ├── database/          # Conexão, schema, seed, migrations
+│   │   ├── middlewares/       # Auth, rate limiter
+│   │   ├── routes/            # Rotas da API REST
+│   │   ├── uploads/           # Uploads locais (fallback)
+│   │   ├── utils/             # Utilitários (peso, templates de e-mail)
+│   │   └── server.js          # Entrada da aplicação
+│   ├── data/                  # Arquivos auxiliares
+│   ├── test/                  # Testes do backend (node --test)
+│   ├── .env.example           # Exemplo de variáveis de ambiente
+│   └── package.json
+├── package.json               # Scripts raiz (testes)
+└── README.md
+```
+
+---
+
+## 🔐 Segurança
+
+> ⚠️ Este repositório **não deve** conter credenciais reais.
+
+- **Nunca commite o arquivo `.env`** — utilize sempre `.env.example` como modelo
+- **Senhas hasheadas** com `bcryptjs` (salt 10) antes do armazenamento
+- **JWT** com `JWT_SECRET` forte e único em produção
+- **Cookies** com `secure: true`, `SameSite` adequado e `HttpOnly` em produção
+- **Rate limiting** aplicado em rotas sensíveis
+- **Helmet** habilitado (XSS, HSTS, CSP e outros)
+- **CORS** restrito por `ALLOWED_ORIGINS`
+- **Validações** em pedidos, login e cadastro
+- **Bloqueio temporário** após tentativas falhas de login (anti-brute-force)
+- **Prepared statements** (`$1,$2,...`) via `pg` (proteção contra SQL Injection)
+- **Upload seguro** com Multer/Cloudinary
+
+---
+
+## 🚀 Como Rodar Localmente
+
+### Pré-requisitos
 
 - [Node.js](https://nodejs.org/) **>= 18.0.0**
 - [PostgreSQL](https://www.postgresql.org/) (local ou [Supabase](https://supabase.com/))
 - [Git](https://git-scm.com/)
 
-### 1) Clonar o reposit�rio
+### 1️⃣ Clonar o repositório
 
-`ash
+```bash
 git clone https://github.com/seu-usuario/casa-so-pimenta-ecommerce.git
 cd casa-so-pimenta-ecommerce
-`
+```
 
-### 2) Configurar Backend
+### 2️⃣ Configurar o backend
 
-`ash
+```bash
 cd server
 cp .env.example .env
-`
+```
 
-Edite o arquivo .env com suas credenciais. **Nunca compartilhe seu .env**.
+Edite o arquivo `.env` com suas credenciais. **Nunca compartilhe seu `.env`**.
 
-Principais vari�veis:
-- \PORT\ - Porta da API (padr�o: 3333)
-- \FRONTEND_URL\ / \ALLOWED_ORIGINS\ - URLs permitidas pelo CORS
-- \JWT_SECRET\ - Gere com: \
-ode -e "console.log(require('crypto').randomBytes(64).toString('hex'))"\
-- \SUPABASE_DB_URL\ ou \DATABASE_URL\ - String de conex�o PostgreSQL
-- \ADMIN_EMAIL\ / \ADMIN_PASSWORD\ - Usados apenas na cria��o autom�tica do primeiro admin
-- \MP_ACCESS_TOKEN\ / \MP_PUBLIC_KEY\ - Mercado Pago
-- \SENDGRID_API_KEY\ ou configurar Nodemailer
-- \CLOUDINARY_*\ - Upload em CDN
-- \MELHOR_ENVIO_*\ - Credenciais Melhor Envio
+**Principais variáveis:**
 
-### 3) Instalar depend�ncias
+| Variável | Descrição |
+|---|---|
+| `PORT` | Porta da API (padrão: `3333`) |
+| `FRONTEND_URL` / `ALLOWED_ORIGINS` | URLs permitidas pelo CORS |
+| `JWT_SECRET` | Gere com: `node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"` |
+| `SUPABASE_DB_URL` / `DATABASE_URL` | String de conexão PostgreSQL |
+| `ADMIN_EMAIL` / `ADMIN_PASSWORD` | Criação automática do primeiro admin |
+| `MP_ACCESS_TOKEN` / `MP_PUBLIC_KEY` | Mercado Pago |
+| `SENDGRID_API_KEY` | Envio de e-mails (ou configurar Nodemailer) |
+| `CLOUDINARY_*` | Upload de imagens em CDN |
+| `MELHOR_ENVIO_*` | Credenciais do Melhor Envio |
 
-`ash
+### 3️⃣ Instalar dependências
+
+```bash
 cd server
 npm install
-`
+```
 
-### 4) Inicializar banco
+### 4️⃣ Inicializar o banco
 
-O servidor executa \createTables()\ e \seedDatabase()\ ao iniciar. Para rodar manualmente:
+O servidor executa `createTables()` e `seedDatabase()` automaticamente ao iniciar.
 
-`ash
-node migrate.mjs  # se existir
-# ou
-node -e "import('./src/database/schema.js').then(m=>m.createTables())"
-`
+### 5️⃣ Rodar o backend
 
-### 5) Rodar backend
+```bash
+npm run dev    # desenvolvimento (nodemon)
+npm start      # produção
+```
 
-`ash
-npm run dev  # desenvolvimento
-npm start    # produ��o
-`
+API: `http://localhost:3333`
 
-API: \http://localhost:3333\
+### 6️⃣ Rodar o frontend
 
-### 6) Rodar frontend
+Frontend estático — abra `site/pages/index.html` diretamente ou sirva via Express:
 
-Frontend est�tico. Pode abrir \site/pages/index.html\ ou servir via Express:
+- `http://localhost:3333/site/pages/index.html`
+- Ou com **Live Server** (VSCode): `http://127.0.0.1:5500/site/pages/index.html`
 
-- \http://localhost:3333/site/pages/index.html\
-- Ou com Live Server (VSCode) em \http://127.0.0.1:5500/site/pages/index.html\
-
-> URL da API definida em \site/assets/js/config.js\ (detecta localhost automaticamente).
-
-## ?? Testes
-
-Node.js Test Runner (\
-ode --test\).
-
-### Frontend
-`ash
-npm run test:site
-# ou
-npm test
-`
-
-### Backend
-`ash
-cd server
-npm test
-`
-
-### Todos
-`ash
-npm test  # site + server
-`
-
-## ?? Banco de Dados (Vis�o Geral)
-
-Principais entidades: \users\, \categories\, \products\, \product_images\, \kits\, \kit_items\, \anners\, \carts\, \cart_items\, \orders\, \order_items\, \coupons\, \login_attempts\, \site_settings\.
-
-Detalhes: \server/src/database/schema.js\.
-
-## ?? Principais Rotas da API
-
-| M�todo | Rota | Descri��o | Auth |
-|---|---|---|---|
-| POST | \/api/auth/register\ | Cadastro | P�blico |
-| POST | \/api/auth/login\ | Login | P�blico |
-| POST | \/api/auth/forgot-password\ | Recupera��o | P�blico |
-| POST | \/api/auth/reset-password\ | Redefinir | P�blico |
-| GET | \/api/products\ | Listar produtos | P�blico |
-| GET | \/api/products/:slug\ | Detalhes | P�blico |
-| GET | \/api/kits\ | Listar kits | P�blico |
-| GET | \/api/categories\ | Listar categorias | P�blico |
-| GET/POST/PUT/DELETE | \/api/cart\ | Carrinho | Opcional |
-| POST | \/api/orders\ | Criar pedido | P�blico/Opcional |
-| GET | \/api/orders/:id\ | Detalhes | Vari�vel |
-| POST | \/api/payments/create-preference\ | Prefer�ncia MP | P�blico |
-| POST | \/api/payments/webhook\ | Webhook MP | P�blico |
-| GET/POST/PUT/DELETE | \/api/admin/*\ | Admin | **Admin** |
-
-> Rotas admin exigem \dminMiddleware\. Ver \server/src/routes/\.
-
-## ??? Acesso Administrativo
-
-1. Acesse \/site/pages/login/\
-2. Use \ADMIN_EMAIL\ / \ADMIN_PASSWORD\ **apenas na primeira execu��o**
-3. Ap�s primeiro login, **altere a senha imediatamente**
-4. Painel admin em rotas protegidas
-
-## ?? Deploy
-
-### Backend (Render/Railway/Heroku)
-1. Vari�veis de ambiente = \.env\ sem valores de dev
-2. \NODE_ENV=production\
-3. \ALLOWED_ORIGINS\ com dom�nio real
-4. \JWT_SECRET\ forte e �nico
-5. \SUPABASE_DB_URL\ em produ��o
-6. \MP_* / SENDGRID_* / MELHOR_ENVIO_*\ reais
-7. Start: \
-pm start\ (em \server/\)
-8. \Procfile\: \web: node src/server.js\
-
-### Frontend (Est�tico)
-Hospedar em Netlify/Vercel/GitHub Pages/Cloudflare Pages ou servir pelo Express em \/site/*\.
-
-Ao hospedar separado, ajuste \API_BASE_URL\ em \site/assets/js/config.js\ para URL real da API.
-
-## ?? Checklist Antes de Tornar P�blico
-
-- [ ] Remover credenciais reais
-- [ ] Garantir que \.env\ n�o ser� commitado (\.gitignore\ j� existe)
-- [ ] Atualizar \.env.example\ com apenas placeholders
-- [ ] \
-pm test\ passando
-- [ ] Remover logs de debug
-- [ ] CORS configurado para dom�nio produ��o
-- [ ] Gerar novas chaves (JWT, MP, DB, e-mail)
-
-## ?? Observa��es T�cnicas
-
-- **Sem ORM**: SQL puro via \pg\ (prepared statements)
-- **Uploads locais**: \server/uploads/\ cont�m exemplos. Em produ��o, priorize Cloudinary
-- **node_modules**: Idealmente n�o versionar; presentes aqui apenas para ambiente local
-- **Testes**: Cobrem verifica��es b�sicas; podem ser expandidos
-- **Encoding UTF-8**: Alguns arquivos com acentos
-
-## ?? Contribui��es
-
-Projeto privado/comercial. Sugest�es via issues s�o bem-vindas.
-
-## ?? Licen�a
-
-ISC
-
-## ????? Autor
-
-**Casa S� Pimenta** - Projeto desenvolvido para fins comerciais.
+> A URL da API é definida em `site/assets/js/config.js` (detecta localhost automaticamente).
 
 ---
 
-**Aviso:** Este README foi gerado com base em an�lise completa do c�digo-fonte. Demonstra dom�nio fullstack, seguran�a, integra��es e boas pr�ticas. **Proteja segredos antes de tornar p�blico.**
+## 🧪 Testes
+
+Utilizando o **Node.js Test Runner** (`node --test`).
+
+### Frontend
+
+```bash
+npm run test:site
+```
+
+### Backend
+
+```bash
+cd server
+npm test
+```
+
+### Todos
+
+```bash
+npm test   # site + server
+```
+
+---
+
+## 🗄️ Banco de Dados
+
+Principais entidades:
+
+`users` · `categories` · `products` · `product_images` · `kits` · `kit_items` · `banners` · `carts` · `cart_items` · `orders` · `order_items` · `coupons` · `login_attempts` · `site_settings`
+
+Detalhes do schema: `server/src/database/schema.js`
+
+---
+
+## 📡 Principais Rotas da API
+
+| Método | Rota | Descrição | Auth |
+|---|---|---|---|
+| POST | `/api/auth/register` | Cadastro | Público |
+| POST | `/api/auth/login` | Login | Público |
+| POST | `/api/auth/forgot-password` | Recuperação de senha | Público |
+| POST | `/api/auth/reset-password` | Redefinir senha | Público |
+| GET | `/api/products` | Listar produtos | Público |
+| GET | `/api/products/:slug` | Detalhes do produto | Público |
+| GET | `/api/kits` | Listar kits | Público |
+| GET | `/api/categories` | Listar categorias | Público |
+| GET/POST/PUT/DELETE | `/api/cart` | Carrinho | Opcional |
+| POST | `/api/orders` | Criar pedido | Público/Opcional |
+| GET | `/api/orders/:id` | Detalhes do pedido | Variável |
+| POST | `/api/payments/create-preference` | Preferência Mercado Pago | Público |
+| POST | `/api/payments/webhook` | Webhook Mercado Pago | Público |
+| GET/POST/PUT/DELETE | `/api/admin/*` | Rotas administrativas | **Admin** |
+
+> As rotas admin exigem `adminMiddleware`. Consulte `server/src/routes/`.
+
+---
+
+## 🔑 Acesso Administrativo
+
+1. Acesse `/site/pages/login/`
+2. Use `ADMIN_EMAIL` / `ADMIN_PASSWORD` **apenas na primeira execução**
+3. Após o primeiro login, **altere a senha imediatamente**
+4. O painel admin fica disponível nas rotas protegidas
+
+---
+
+## ☁️ Deploy
+
+### Backend (Render / Railway / Heroku)
+
+1. Configure as variáveis de ambiente (sem valores de desenvolvimento)
+2. Defina `NODE_ENV=production`
+3. Configure `ALLOWED_ORIGINS` com o domínio real
+4. Gere um `JWT_SECRET` forte e único
+5. Use `SUPABASE_DB_URL` do banco de produção
+6. Configure chaves reais de `MP_*`, `SENDGRID_*` e `MELHOR_ENVIO_*`
+7. Start: `npm start` (em `server/`)
+8. `Procfile`: `web: node src/server.js`
+
+### Frontend (Estático)
+
+Hospede em **Netlify**, **Vercel**, **GitHub Pages** ou **Cloudflare Pages**, ou sirva pelo Express em `/site/*`.
+
+Ao hospedar separado, ajuste `API_BASE_URL` em `site/assets/js/config.js` para a URL real da API.
+
+---
+
+## ✅ Checklist Antes de Tornar Público
+
+- [ ] Remover credenciais reais
+- [ ] Garantir que `.env` não será commitado (`.gitignore` já existe)
+- [ ] Atualizar `.env.example` com apenas placeholders
+- [ ] `npm test` passando
+- [ ] Remover logs de debug
+- [ ] CORS configurado para o domínio de produção
+- [ ] Gerar novas chaves (JWT, Mercado Pago, DB, e-mail)
+
+---
+
+## 📝 Observações Técnicas
+
+- **Sem ORM**: SQL puro via `pg` com prepared statements
+- **Uploads locais**: `server/uploads/` contém exemplos — em produção, priorize o Cloudinary
+- **Testes**: cobrem verificações básicas e podem ser expandidos
+- **Frontend sem frameworks**: todo o JavaScript é vanilla, sem build step
+
+---
+
+## 📄 Licença
+
+ISC
+
+---
+
+## 👤 Autor
+
+**Casa Só Pimenta** — projeto desenvolvido para fins comerciais.
