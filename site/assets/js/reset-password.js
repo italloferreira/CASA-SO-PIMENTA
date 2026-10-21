@@ -38,8 +38,8 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    if (senha.length < 6) {
-      mostrarErro('A senha deve ter no mínimo 6 caracteres.');
+    if (senha.length < 8) {
+      mostrarErro('A senha deve ter no mínimo 8 caracteres.');
       return;
     }
 

@@ -4,6 +4,7 @@ import crypto from 'crypto';
 import sgMail from '@sendgrid/mail';
 import { pool } from '../database/connection.js';
 import { forgotPasswordEmail } from '../utils/emailTemplates.js';
+import { getMailFrom } from '../utils/mailFrom.js';
 
 export async function register(req, res) {
   const { name, email, password, phone } = req.body;
@@ -240,7 +241,7 @@ export async function forgotPassword(req, res) {
     try {
       await sgMail.send({
         to: email,
-        from: process.env.SENDGRID_FROM || '"Casa Só Pimenta" <casasopimenta@gmail.com>',
+        from: getMailFrom(),
         subject: 'Recuperação de senha - Casa Só Pimenta',
         html: forgotPasswordEmail(user.name, resetLink)
       });

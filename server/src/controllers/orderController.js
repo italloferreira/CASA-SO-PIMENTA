@@ -6,6 +6,7 @@ import { canTransition, isValidStatusForType } from '../config/orderStatusMachin
 import { selectBox } from '../config/boxes.js';
 import { getAccessToken } from './melhorEnvioController.js';
 import { calculateCartWeight } from '../utils/cartWeight.js';
+import { getMailFrom } from '../utils/mailFrom.js';
 import crypto from 'crypto';
 
 function generatePickupCode() {
@@ -331,7 +332,7 @@ export async function createOrder(req, res) {
 
     try {
       const adminEmailResult = await pool.query(`SELECT value FROM settings WHERE key = 'contact_email'`);
-      const adminEmail = adminEmailResult.rows[0]?.value || process.env.SENDGRID_FROM?.match(/<(.+)>/)?.[1];
+      const adminEmail = adminEmailResult.rows[0]?.value || getMailFrom().email;
 
       const orderForEmail = {
         id: orderData.id,
@@ -349,7 +350,7 @@ export async function createOrder(req, res) {
         coupon_discount: orderData.coupon_discount ? Number(orderData.coupon_discount) : 0
       };
 
-      const fromAddr = process.env.SENDGRID_FROM || '"Casa Só Pimenta" <casasopimenta@gmail.com>';
+      const fromAddr = getMailFrom();
 
       if (adminEmail) {
         await sgMail.send({
@@ -562,7 +563,7 @@ export async function updateOrderStatus(req, res) {
       });
     }
 
-    const fromAddr = process.env.SENDGRID_FROM || '"Casa Só Pimenta" <casasopimenta@gmail.com>';
+    const fromAddr = getMailFrom();
 
     async function sendStatusEmail(updatedFields, subject) {
       if (!order.customer_email) return;
@@ -684,7 +685,7 @@ export async function confirmPickup(req, res) {
 
     if (order.customer_email) {
       try {
-        const fromAddr = process.env.SENDGRID_FROM || '"Casa Só Pimenta" <casasopimenta@gmail.com>';
+        const fromAddr = getMailFrom();
         const updatedOrder = { ...order, status: 'withdrawn' };
         await sgMail.send({
           to: order.customer_email,
@@ -733,7 +734,7 @@ export async function cancelMyOrder(req, res) {
     /* Notificar cliente */
     if (order.customer_email) {
       try {
-        const fromAddr = process.env.SENDGRID_FROM || '"Casa Só Pimenta" <casasopimenta@gmail.com>';
+        const fromAddr = getMailFrom();
         const updatedOrder = { ...order, status: 'cancelled' };
         await sgMail.send({
           to: order.customer_email,
@@ -751,7 +752,7 @@ export async function cancelMyOrder(req, res) {
       const adminResult = await pool.query("SELECT email FROM users WHERE role = 'admin' LIMIT 1");
       if (adminResult.rows.length > 0) {
         const adminEmail = adminResult.rows[0].email;
-        const fromAddr = process.env.SENDGRID_FROM || '"Casa Só Pimenta" <casasopimenta@gmail.com>';
+        const fromAddr = getMailFrom();
         const adminSiteUrl = (process.env.FRONTEND_URL || 'http://localhost:5500/site/pages/index.html').replace('/site/pages/index.html', '');
         const safeName = String(order.customer_name).replace(/[&<>"']/g, function (m) {
           if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; if (m === '"') return '&quot;'; return '&#39;';
