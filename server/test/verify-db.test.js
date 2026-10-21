@@ -21,6 +21,7 @@ async function countProducts(categoryId) {
 const expected = [
   ['molhos', 'Molhos'],
   ['conservas', 'Conservas'],
+  ['pequi', 'Pequi'],
   ['azeites', 'Azeites'],
   ['vinagres', 'Vinagres'],
   ['produtos-de-limpeza', 'Produtos de limpeza'],

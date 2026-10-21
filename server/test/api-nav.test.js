@@ -33,14 +33,14 @@ test('categorias novas e renomeadas estão presentes na API', () => {
   const slugs = categories.map((c) => c.slug);
   const names = categories.map((c) => c.name);
 
-  for (const expected of ['molhos', 'conservas', 'azeites', 'vinagres', 'produtos-de-limpeza', 'kits', 'farinhas', 'geleias', 'pastosas', 'sementes', 'liofilizados', 'aveias', 'desidratados', 'melados', 'mantegas', 'sal', 'farofas', 'mel', 'tira-gostos', 'cocos', 'graos', 'granjeados', 'acucares']) {
+  for (const expected of ['molhos', 'conservas', 'pequi', 'azeites', 'vinagres', 'produtos-de-limpeza', 'kits', 'farinhas', 'geleias', 'pastosas', 'sementes', 'liofilizados', 'aveias', 'desidratados', 'melados', 'mantegas', 'sal', 'farofas', 'mel', 'tira-gostos', 'cocos', 'graos', 'granjeados', 'acucares']) {
     assert.ok(slugs.includes(expected), 'categoria esperada não encontrada: ' + expected);
   }
 
   const molhos = categories.find((c) => c.slug === 'molhos');
   assert.equal(molhos.name, 'Molhos', 'molhos deve ter nome Molhos');
 
-  for (const [slug, name] of [['cocos', 'Cocos'], ['graos', 'Grãos'], ['granjeados', 'Granjeados'], ['acucares', 'Açúcares']]) {
+  for (const [slug, name] of [['cocos', 'Cocos'], ['graos', 'Grãos'], ['granjeados', 'Granjeados'], ['acucares', 'Açúcares'], ['pequi', 'Pequi']]) {
     const cat = categories.find((c) => c.slug === slug);
     assert.ok(cat, 'categoria nova ausente: ' + slug);
     assert.equal(cat.name, name, slug + ' deve ter nome ' + name);
@@ -57,7 +57,7 @@ test('categorias inalteradas continuam na API', () => {
 });
 
 test('produtos por categoria retornam 200 para todas as novas categorias', async () => {
-  for (const slug of ['molhos', 'conservas', 'azeites', 'vinagres', 'produtos-de-limpeza', 'kits', 'farinhas', 'geleias', 'pastosas', 'sementes', 'liofilizados', 'aveias', 'desidratados', 'melados', 'mantegas', 'sal', 'farofas', 'mel', 'tira-gostos', 'cocos', 'graos', 'granjeados', 'acucares']) {
+  for (const slug of ['molhos', 'conservas', 'pequi', 'azeites', 'vinagres', 'produtos-de-limpeza', 'kits', 'farinhas', 'geleias', 'pastosas', 'sementes', 'liofilizados', 'aveias', 'desidratados', 'melados', 'mantegas', 'sal', 'farofas', 'mel', 'tira-gostos', 'cocos', 'graos', 'granjeados', 'acucares']) {
     const data = await getProductsByCategory(slug);
     assert.ok(Array.isArray(data.products), 'products deve ser array para ' + slug);
     assert.equal(typeof data.total, 'number', 'total deve ser número para ' + slug);

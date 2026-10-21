@@ -5,6 +5,7 @@ export async function seedDatabase() {
   const categories = [
     ['Molhos', 'molhos'],
     ['Conservas', 'conservas'],
+    ['Pequi', 'pequi'],
     ['Temperos', 'temperos'],
     ['Farinhas', 'farinhas'],
     ['Castanhas', 'castanhas'],

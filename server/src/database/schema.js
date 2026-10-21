@@ -232,6 +232,7 @@ export async function createTables() {
     INSERT INTO categories (name, slug)
     VALUES
       ('Conservas', 'conservas'),
+      ('Pequi', 'pequi'),
       ('Azeites', 'azeites'),
       ('Vinagres', 'vinagres'),
       ('Produtos de limpeza', 'produtos-de-limpeza'),

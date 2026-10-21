@@ -53,6 +53,7 @@ const CHECK_DESKTOP = [
   ['Molhos e Conservas', 'Molhos e Conservas'],
   ['submenu Molhos', 'href="/site/pages/produtos/molhos/index.html"'],
   ['submenu Conservas', 'href="/site/pages/produtos/conservas/index.html"'],
+  ['submenu Pequi', 'href="/site/pages/produtos/pequi/index.html"'],
   ['submenu Geleias', 'href="/site/pages/produtos/geleias/index.html"'],
   ['submenu Pastosas', 'href="/site/pages/produtos/pastosas/index.html"'],
   ['Produtos naturais', 'Produtos naturais'],
@@ -87,6 +88,7 @@ const CHECK_MOBILE = [
   ['Molhos e Conservas', 'Molhos e Conservas'],
   ['submenu Molhos', 'href="/site/pages/produtos/molhos/index.html"'],
   ['submenu Conservas', 'href="/site/pages/produtos/conservas/index.html"'],
+  ['submenu Pequi', 'href="/site/pages/produtos/pequi/index.html"'],
   ['submenu Geleias', 'href="/site/pages/produtos/geleias/index.html"'],
   ['submenu Pastosas', 'href="/site/pages/produtos/pastosas/index.html"'],
   ['Produtos naturais', 'Produtos naturais'],
@@ -190,6 +192,7 @@ test('subcategorias: nenhuma categoria nova com data-categoria quebrada', () => 
   const cases = [
     ['site/pages/produtos/molhos/index.html', 'molhos'],
     ['site/pages/produtos/conservas/index.html', 'conservas'],
+    ['site/pages/produtos/pequi/index.html', 'pequi'],
     ['site/pages/produtos/azeites/index.html', 'azeites'],
     ['site/pages/produtos/vinagres/index.html', 'vinagres'],
     ['site/pages/produtos/produtosDeLimpeza/index.html', 'produtos-de-limpeza'],
