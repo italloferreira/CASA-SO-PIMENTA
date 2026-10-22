@@ -33,7 +33,7 @@ test('categorias novas e renomeadas estão presentes na API', () => {
   const slugs = categories.map((c) => c.slug);
   const names = categories.map((c) => c.name);
 
-  for (const expected of ['molhos', 'conservas', 'pequi', 'azeites', 'vinagres', 'produtos-de-limpeza', 'kits', 'farinhas', 'geleias', 'pastosas', 'sementes', 'liofilizados', 'aveias', 'desidratados', 'melados', 'mantegas', 'sal', 'farofas', 'mel', 'tira-gostos', 'cocos', 'graos', 'granjeados', 'acucares']) {
+  for (const expected of ['molhos', 'conservas', 'pequi', 'azeites', 'vinagres', 'produtos-de-limpeza', 'kits', 'farinhas', 'geleias', 'pastosas', 'sementes', 'liofilizados', 'aveias', 'desidratados', 'mantegas', 'sal', 'farofas', 'mel', 'tira-gostos', 'cocos', 'graos', 'granjeados', 'acucares']) {
     assert.ok(slugs.includes(expected), 'categoria esperada não encontrada: ' + expected);
   }
 
@@ -47,6 +47,7 @@ test('categorias novas e renomeadas estão presentes na API', () => {
   }
 
   assert.ok(!slugs.includes('pimentas'), 'categoria pimentas não deve existir');
+  assert.ok(!slugs.includes('melados'), 'categoria melados não deve existir');
 });
 
 test('categorias inalteradas continuam na API', () => {
@@ -57,7 +58,7 @@ test('categorias inalteradas continuam na API', () => {
 });
 
 test('produtos por categoria retornam 200 para todas as novas categorias', async () => {
-  for (const slug of ['molhos', 'conservas', 'pequi', 'azeites', 'vinagres', 'produtos-de-limpeza', 'kits', 'farinhas', 'geleias', 'pastosas', 'sementes', 'liofilizados', 'aveias', 'desidratados', 'melados', 'mantegas', 'sal', 'farofas', 'mel', 'tira-gostos', 'cocos', 'graos', 'granjeados', 'acucares']) {
+  for (const slug of ['molhos', 'conservas', 'pequi', 'azeites', 'vinagres', 'produtos-de-limpeza', 'kits', 'farinhas', 'geleias', 'pastosas', 'sementes', 'liofilizados', 'aveias', 'desidratados', 'mantegas', 'sal', 'farofas', 'mel', 'tira-gostos', 'cocos', 'graos', 'granjeados', 'acucares']) {
     const data = await getProductsByCategory(slug);
     assert.ok(Array.isArray(data.products), 'products deve ser array para ' + slug);
     assert.equal(typeof data.total, 'number', 'total deve ser número para ' + slug);

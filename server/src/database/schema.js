@@ -224,7 +224,7 @@ export async function createTables() {
 
   await pool.query(`
     DELETE FROM categories
-    WHERE slug = 'pimentas'
+    WHERE slug IN ('pimentas', 'melados')
       AND NOT EXISTS (SELECT 1 FROM products WHERE products.category_id = categories.id);
   `);
 
@@ -242,7 +242,6 @@ export async function createTables() {
       ('Liofilizados', 'liofilizados'),
       ('Aveias', 'aveias'),
       ('Desidratados', 'desidratados'),
-      ('Melados', 'melados'),
       ('Mantegas', 'mantegas'),
       ('Sal', 'sal'),
       ('Farofas', 'farofas'),

@@ -37,7 +37,6 @@ const expected = [
   ['liofilizados', 'Liofilizados'],
   ['aveias', 'Aveias'],
   ['desidratados', 'Desidratados'],
-  ['melados', 'Melados'],
   ['mantegas', 'Mantegas'],
   ['sal', 'Sal'],
   ['farofas', 'Farofas'],
@@ -60,6 +59,11 @@ test('todas as categorias esperadas existem com nomes corretos', async () => {
 test('categoria "pimentas" não existe mais', async () => {
   const pimentas = await getCategoryBySlug('pimentas');
   assert.ok(!pimentas, 'categoria pimentas ainda existe');
+});
+
+test('categoria "melados" não existe mais', async () => {
+  const melados = await getCategoryBySlug('melados');
+  assert.ok(!melados, 'categoria melados ainda existe');
 });
 
 test('molhos possui produtos vinculados (herdados de pimentas)', async () => {

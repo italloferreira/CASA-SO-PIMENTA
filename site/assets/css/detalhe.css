@@ -202,7 +202,7 @@ main {
 
 .produto-detalhe-img img {
   width: 100%;
-  height: 420px;
+  height: 550px;
   object-fit: cover;
   display: block;
 }
@@ -329,6 +329,7 @@ main {
   font-size: 15px;
   line-height: 1.6;
   color: var(--cor-preto);
+  white-space: pre-line;
 }
 
 .produto-ingredientes ul {
@@ -437,7 +438,7 @@ main {
 footer {
   background-color: var(--cor-footer-fundo);
   width: 100%;
-  height: 100%;
+  height: 400px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -757,10 +758,6 @@ footer p {
     max-width: 100%;
   }
 
-  .produto-detalhe-img img {
-    height: 300px;
-  }
-
   header {
     width: 100%;
     left: 0;
@@ -1013,10 +1010,9 @@ footer p {
         align-items: center;
         flex-direction: column;
     }
-
-    .redes-section {
+.redes-section {
         width: 80%;
-        padding-bottom: 20px;
+        height: 150px;
     }
 
     .navegacao-section,
@@ -1032,8 +1028,12 @@ footer p {
         padding-bottom: 20px;
     }
 
-    .pagamentos-section {
+      .pagamentos-section {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
         width: 90%;
+        height: 100px;
     }
 
     .pagamentos-section div {
@@ -1049,7 +1049,12 @@ footer p {
         object-fit: contain;
     }
 
-    footer p{
-      text-align: center;
+     footer p{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 90%;
+        height: 100px;
+        text-align: center;
     }
 }

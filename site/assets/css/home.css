@@ -368,10 +368,14 @@ main{
 
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
     flex-direction: column;
     margin-bottom: 15px;
-    
+    cursor: pointer;
+}
+
+.cartao.indisponivel {
+    cursor: default;
 }
 
 .cartao.indisponivel .overlay-indisponivel {
@@ -406,7 +410,7 @@ main{
 
 .cartao-img{
     width: 100%;
-    height: 40%;
+    height: 50%;
 }
 
 .cartao-h1{
@@ -477,17 +481,17 @@ main{
 
 .conteiner-botões-kit{
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
     width: 100%;
-    height: 20%;
+    height: 15%;
 }
 
 .add-carrinho-botao{
     background-color: transparent;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-    width: 40%;
-    height: 70%;
+    width: 95%;
+    height: 80%;
     cursor: pointer;
 }
 
@@ -497,23 +501,8 @@ main{
 }
 
 .add-carrinho-botao img{
-    width: 15%;
-}
-
-.ver-mais-botao{
-    background-color: transparent;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-    width: 40%;
-    height: 70%;
-    cursor: pointer;
-    font-family: var(--font-principal);
-    font-size: 14px;
-    color: var(--cor-cinza-texto-secundario);
-}
-
-.ver-mais-botao:hover{
-    background-color: var(--cor-cinza-hover);
-    transition: 0.5s;
+    width: 20px;
+    height: 20px;
 }
 
 /*footer*/
@@ -521,7 +510,7 @@ main{
 footer{
     background-color: var(--cor-footer-fundo);
     width: 100%;
-    height: 100%;
+    height: 400px;
 
     display: flex;
     flex-direction: column;
@@ -1067,11 +1056,11 @@ footer p{
 
     .cartao {
         display: flex;
-        justify-content: space-evenly;
+        justify-content: space-between;
         align-items: center;
         flex-direction: column;
-        width: 70%;
-        height: 500px;
+        width: 80%;
+        height: 70vh;
     }
 
     .cartao-img {
@@ -1081,7 +1070,9 @@ footer p{
 
     .cartao h1{
         width: 90%;
-        height: 15%;
+        height: 10%;
+        font-size: 1rem;
+        text-align: center;
     }
 
     .cartao-valor{
@@ -1092,9 +1083,13 @@ footer p{
         height: 10%;
     }
 
+    .cartao-valor h3 {
+        font-size: 5vh;
+    }
+
     .cartao-produtos{
         width: 100%;
-        height: 100%;
+        height: 25%;
     }
 
     .cartao-produtos ul{
@@ -1113,17 +1108,12 @@ footer p{
 
     .conteiner-botões-kit{
         width: 100%;
-        height: 30%;
+        height: 10%;
     }
 
     .add-carrinho-botao{
-        width: 45%;
-        height: 70px;
-    }
-
-    .ver-mais-botao{
-        width: 45%;
-        height: 70px;
+        width: 95%;
+        height: 80%;
     }
 
     /* Footer */
@@ -1138,7 +1128,7 @@ footer p{
 
     .redes-section {
         width: 80%;
-        padding-bottom: 20px;
+        height: 150px;
     }
 
     .navegacao-section,
@@ -1155,7 +1145,11 @@ footer p{
     }
 
     .pagamentos-section {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
         width: 90%;
+        height: 100px;
     }
 
     .pagamentos-section div {
@@ -1172,6 +1166,11 @@ footer p{
     }
 
     footer p{
-      text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 90%;
+        height: 100px;
+        text-align: center;
     }
 }

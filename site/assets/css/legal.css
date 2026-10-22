@@ -309,7 +309,7 @@ main{
 footer{
     background-color: var(--cor-footer-fundo);
     width: 100%;
-    height: 100%;
+    height: 400px;
 
     display: flex;
     flex-direction: column;
@@ -841,9 +841,9 @@ footer p{
         flex-direction: column;
     }
 
-    .redes-section {
+   .redes-section {
         width: 80%;
-        padding-bottom: 20px;
+        height: 150px;
     }
 
     .navegacao-section,
@@ -860,7 +860,11 @@ footer p{
     }
 
     .pagamentos-section {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
         width: 90%;
+        height: 100px;
     }
 
     .pagamentos-section div {
@@ -877,6 +881,11 @@ footer p{
     }
 
     footer p{
-      text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 90%;
+        height: 100px;
+        text-align: center;
     }
 }

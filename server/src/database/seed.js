@@ -21,7 +21,6 @@ export async function seedDatabase() {
     ['Liofilizados', 'liofilizados'],
     ['Aveias', 'aveias'],
     ['Desidratados', 'desidratados'],
-    ['Melados', 'melados'],
     ['Mantegas', 'mantegas'],
     ['Sal', 'sal'],
     ['Farofas', 'farofas'],

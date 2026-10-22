@@ -4,15 +4,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
   document.addEventListener('click', function (e) {
     var btn = e.target.closest('.add-carrinho-botao');
-    if (!btn || btn.disabled) return;
-    var data = btn.dataset;
-    addCarrinho({
-      id: data.productId,
-      nome: data.productName,
-      valor: data.productPrice,
-      img: data.productImg,
-      tipo: data.productType
-    });
+    if (btn) {
+      if (btn.disabled) return;
+      var data = btn.dataset;
+      addCarrinho({
+        id: data.productId,
+        nome: data.productName,
+        valor: data.productPrice,
+        img: data.productImg,
+        tipo: data.productType
+      });
+      return;
+    }
+
+    // Clique em qualquer outra parte do card abre a página de detalhes
+    var card = e.target.closest('.cartao[data-href]');
+    if (card) window.location.href = card.dataset.href;
   });
 
   const categoria = produtosSection.dataset.categoria;
@@ -41,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var ehGranel = window.CATEGORIAS_GRANEL_100G && window.CATEGORIAS_GRANEL_100G.indexOf(produto.category_slug) !== -1;
 
-    return '<div class="cartao' + (disponivel ? '' : ' indisponivel') + '">' +
+    return '<div class="cartao' + (disponivel ? '' : ' indisponivel') + '"' + (disponivel ? ' data-href="/site/pages/produtos/detalhe/index.html?id=' + produto.id + '&categoria=' + categoria + '"' : '') + '>' +
       (disponivel ? '' : '<div class="overlay-indisponivel"><span>Indisponível</span></div>') +
       '<img src="' + imgSrc + '" alt="' + (window.escapeHtml ? window.escapeHtml(produto.name) : produto.name) + '" loading="lazy" decoding="async">' +
       '<h3>' + (window.escapeHtml ? window.escapeHtml(produto.name) : produto.name) + '</h3>' +
@@ -51,7 +58,6 @@ document.addEventListener('DOMContentLoaded', function () {
         '<button class="add-carrinho-botao"' + (disponivel ? ' data-product-id="' + produto.id + '" data-product-name="' + (window.escapeHtml ? window.escapeHtml(produto.name) : produto.name) + '" data-product-price="' + venda + '" data-product-img="' + imgSrc + '" data-product-type="produto" data-product-categoria="' + categoria + '"' : ' disabled') + '>' +
           '<img src="/site/imgs/icones/carrinho.png" alt="Adicionar ao carrinho">' +
         '</button>' +
-        '<button' + (disponivel ? ' onclick="window.location.href=\'/site/pages/produtos/detalhe/index.html?id=' + produto.id + '&categoria=' + categoria + '\'"' : ' disabled') + '>Ver produto</button>' +
       '</div>' +
     '</div>';
   }

@@ -8,7 +8,8 @@ function precoVenda(prod) {
   return prod.compare_price || prod.price;
 }
 
-function estaDisponivel(prod) {
+// Nome diferente de window.estaDisponivel (carrinho.js), que sobrescreveria esta função
+function produtoDisponivel(prod) {
   return !!prod.stock && prod.is_active !== 0;
 }
 
@@ -19,16 +20,15 @@ function renderProductCard(prod) {
     ? '<p style="text-decoration:line-through;color:#999;font-size:14px;">R$ ' + formatPrice(prod.price) + '</p><h3 style="color:#c53b22;">R$ ' + formatPrice(venda) + '</h3>'
     : '<p>R$</p><h3>' + formatPrice(venda) + '</h3>';
 
-  var disponivel = estaDisponivel(prod);
+  var disponivel = produtoDisponivel(prod);
 
-  return '<div class="cartao' + (disponivel ? '' : ' indisponivel') + '">' +
+  return '<div class="cartao' + (disponivel ? '' : ' indisponivel') + '"' + (disponivel ? ' data-href="/site/pages/produtos/detalhe/index.html?id=' + prod.id + '"' : '') + '>' +
     (disponivel ? '' : '<div class="overlay-indisponivel"><span>Indisponível</span></div>') +
-    '<img class="cartao-img" src="' + imgSrc + '" alt="' + escH(prod.name) + '" loading="lazy" decoding="async" style="cursor:pointer;">' +
+    '<img class="cartao-img" src="' + imgSrc + '" alt="' + escH(prod.name) + '" loading="lazy" decoding="async">' +
     '<h1 class="cartao-h1">' + escH(prod.name) + '</h1>' +
     '<div class="cartao-valor">' + precoHtml + '</div>' +
     '<div class="conteiner-botões-kit">' +
       '<button class="add-carrinho-botao"' + (disponivel ? ' data-product-id="' + prod.id + '" data-product-name="' + escH(prod.name) + '" data-product-price="' + venda + '" data-product-img="' + imgSrc + '" data-product-type="produto"' : ' disabled') + '><img src="/site/imgs/icones/carrinho.png" alt="Adicionar ao carrinho"></button>' +
-      '<button class="ver-mais-botao"' + (disponivel ? ' onclick="window.location.href=\'/site/pages/produtos/detalhe/index.html?id=' + prod.id + '\'"' : ' disabled') + '>Ver mais</button>' +
     '</div>' +
     '</div>';
 }
@@ -61,15 +61,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
   document.addEventListener('click', function (e) {
     var btn = e.target.closest('.add-carrinho-botao');
-    if (!btn || btn.disabled) return;
-    var data = btn.dataset;
-    addCarrinho({
-      id: data.productId,
-      nome: data.productName,
-      valor: data.productPrice,
-      img: data.productImg,
-      tipo: data.productType
-    });
+    if (btn) {
+      if (btn.disabled) return;
+      var data = btn.dataset;
+      addCarrinho({
+        id: data.productId,
+        nome: data.productName,
+        valor: data.productPrice,
+        img: data.productImg,
+        tipo: data.productType
+      });
+      return;
+    }
+
+    // Clique em qualquer outra parte do card abre a página de detalhes
+    var card = e.target.closest('.cartao[data-href]');
+    if (card) window.location.href = card.dataset.href;
   });
 
   /* ===== CARROSSEL ===== */
@@ -202,14 +209,13 @@ document.addEventListener('DOMContentLoaded', function () {
           '</ul></div>';
       }
 
-      cartoesSection.innerHTML += '<div class="cartao">' +
+      cartoesSection.innerHTML += '<div class="cartao" data-href="/site/pages/kits/detalhe/index.html?id=' + kit.id + '">' +
         '<img class="cartao-img" src="' + imgSrc + '" alt="' + escH(kit.name) + '" loading="lazy" decoding="async">' +
         '<h1 class="cartao-h1">' + escH(kit.name) + '</h1>' +
         '<div class="cartao-valor"><p>R$</p><h3>' + valorFormatado + '</h3></div>' +
         produtosHtml +
         '<div class = "conteiner-botões-kit">' +
           '<button class="add-carrinho-botao" data-product-id="' + kit.id + '" data-product-name="' + escH(kit.name) + '" data-product-price="' + kit.price + '" data-product-img="' + imgSrc + '" data-product-type="kit"><img src="/site/imgs/icones/carrinho.png" alt="Adicionar ao carrinho"></button>' +
-          '<button class="ver-mais-botao" onclick="window.location.href=\'/site/pages/kits/detalhe/index.html?id=' + kit.id + '\'">Ver mais</button>' +
         '</div>' +
         '</div>';
     });
