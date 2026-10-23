@@ -1,0 +1,15 @@
+{
+  "redirects": [
+    { "source": "/", "destination": "/site/pages/index.html", "permanent": true },
+    { "source": "/site/pages/produtos/pimentas/index.html", "destination": "/site/pages/produtos/molhos/index.html", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/sitemap.xml", "destination": "https://casa-so-pimenta-api.onrender.com/api/sitemap.xml" }
+  ],
+  "headers": [
+    {
+      "source": "/site/pages/admin/(.*)",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+    }
+  ]
+}

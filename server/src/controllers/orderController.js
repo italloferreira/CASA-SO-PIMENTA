@@ -1,5 +1,3 @@
-import sgMail from '@sendgrid/mail';
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 import { adminNewOrderEmail, customerOrderConfirmationEmail, orderStatusChangeEmail } from '../utils/emailTemplates.js';
 import { pool } from '../database/connection.js';
 import { canTransition, isValidStatusForType } from '../config/orderStatusMachine.js';
@@ -7,6 +5,7 @@ import { selectBox } from '../config/boxes.js';
 import { getAccessToken } from './melhorEnvioController.js';
 import { calculateCartWeight } from '../utils/cartWeight.js';
 import { getMailFrom } from '../utils/mailFrom.js';
+import { sendMail } from '../utils/mailer.js';
 import { calcularValorPix } from '../utils/pixDiscount.js';
 import crypto from 'crypto';
 
@@ -366,7 +365,7 @@ export async function createOrder(req, res) {
       const fromAddr = getMailFrom();
 
       if (adminEmail) {
-        await sgMail.send({
+        await sendMail({
           to: adminEmail,
           from: fromAddr,
           subject: 'Novo pedido #' + orderData.id + ' — Casa Só Pimenta',
@@ -375,7 +374,7 @@ export async function createOrder(req, res) {
       }
 
       if (customer_email) {
-        await sgMail.send({
+        await sendMail({
           to: customer_email,
           from: fromAddr,
           subject: 'Pedido #' + orderData.id + ' confirmado! — Casa Só Pimenta',
@@ -582,7 +581,7 @@ export async function updateOrderStatus(req, res) {
       if (!order.customer_email) return;
       try {
         const updatedOrder = { ...order, ...updatedFields };
-        await sgMail.send({
+        await sendMail({
           to: order.customer_email,
           from: fromAddr,
           subject: subject,
@@ -700,7 +699,7 @@ export async function confirmPickup(req, res) {
       try {
         const fromAddr = getMailFrom();
         const updatedOrder = { ...order, status: 'withdrawn' };
-        await sgMail.send({
+        await sendMail({
           to: order.customer_email,
           from: fromAddr,
           subject: 'Pedido #' + id + ' retirado — Casa Só Pimenta',
@@ -749,7 +748,7 @@ export async function cancelMyOrder(req, res) {
       try {
         const fromAddr = getMailFrom();
         const updatedOrder = { ...order, status: 'cancelled' };
-        await sgMail.send({
+        await sendMail({
           to: order.customer_email,
           from: fromAddr,
           subject: 'Pedido #' + id + ' cancelado — Casa Só Pimenta',
@@ -770,7 +769,7 @@ export async function cancelMyOrder(req, res) {
         const safeName = String(order.customer_name).replace(/[&<>"']/g, function (m) {
           if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; if (m === '"') return '&quot;'; return '&#39;';
         });
-        await sgMail.send({
+        await sendMail({
           to: adminEmail,
           from: fromAddr,
           subject: 'Pedido #' + id + ' cancelado pelo cliente — Casa Só Pimenta',

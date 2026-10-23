@@ -12,9 +12,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function renderizarKit(kit) {
     const valorFormatado = Number(kit.price).toFixed(2).replace('.', ',');
-    document.title = 'Casa Só Pimenta / ' + kit.name;
-
     const imgSrc = imgUrl(kit.image_url);
+
+    if (window.aplicarSeoItem) {
+      window.aplicarSeoItem({
+        tipo: 'kit',
+        id: kit.id,
+        nome: kit.name,
+        descricao: kit.description,
+        preco: kit.price,
+        estoque: !!kit.stock,
+        imagens: [kit.image_url],
+        categoria: 'Kits'
+      });
+    } else {
+      document.title = kit.name + ' | Casa Só Pimenta';
+    }
 
     let itensHtml = '';
     if (kit.items && kit.items.length > 0) {

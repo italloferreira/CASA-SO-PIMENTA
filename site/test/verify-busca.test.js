@@ -93,7 +93,7 @@ async function montarPagina(categoria, atrasos = {}) {
   return {
     urls,
     aguardar,
-    nomes: () => [...section.innerHTML.matchAll(/<h3>(.*?)<\/h3>/g)].map((m) => m[1]),
+    nomes: () => [...section.innerHTML.matchAll(/<h3>(.*?)<\/h3>/g)].map((m) => m[1].replace(/<[^>]+>/g, '')),
     html: () => section.innerHTML,
     temSentinel: () => section.filhos.length > 0,
     digitar(valor) { input.value = valor; onInput.call(input); },

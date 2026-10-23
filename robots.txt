@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /site/pages/admin/
+Disallow: /site/pages/checkout/
+Disallow: /site/pages/conta/
+Disallow: /site/pages/pedidos/
+Disallow: /site/pages/login/
+
+Sitemap: https://www.casasopimenta.com.br/sitemap.xml

@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
     return '<div class="cartao' + (disponivel ? '' : ' indisponivel') + '"' + (disponivel ? ' data-href="/site/pages/produtos/detalhe/index.html?id=' + produto.id + '&categoria=' + categoria + '"' : '') + '>' +
       (disponivel ? '' : '<div class="overlay-indisponivel"><span>Indisponível</span></div>') +
       '<img src="' + imgSrc + '" alt="' + (window.escapeHtml ? window.escapeHtml(produto.name) : produto.name) + '" loading="lazy" decoding="async">' +
-      '<h3>' + (window.escapeHtml ? window.escapeHtml(produto.name) : produto.name) + '</h3>' +
+      '<h3>' + (disponivel ? '<a class="cartao-link" href="/site/pages/produtos/detalhe/index.html?id=' + produto.id + '">' + (window.escapeHtml ? window.escapeHtml(produto.name) : produto.name) + '</a>' : (window.escapeHtml ? window.escapeHtml(produto.name) : produto.name)) + '</h3>' +
       (ehGranel ? '<p class="unidade-de-medida">100g</p>' : '') +
       '<p>' + precoHtml + '</p>' +
       '<div>' +

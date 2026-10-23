@@ -1,11 +1,11 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
-import sgMail from '@sendgrid/mail';
 import { OAuth2Client } from 'google-auth-library';
 import { pool } from '../database/connection.js';
 import { forgotPasswordEmail } from '../utils/emailTemplates.js';
 import { getMailFrom } from '../utils/mailFrom.js';
+import { sendMail, isMailConfigured } from '../utils/mailer.js';
 
 export async function register(req, res) {
   const { name, email, password, phone } = req.body;
@@ -314,10 +314,9 @@ export async function forgotPassword(req, res) {
 
   const resetLink = process.env.FRONTEND_URL + '/site/pages/login/reset-password/index.html?token=' + token;
 
-  if (process.env.SENDGRID_API_KEY && process.env.SENDGRID_API_KEY !== 'SUA_CHAVE_AQUI') {
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  if (isMailConfigured()) {
     try {
-      await sgMail.send({
+      await sendMail({
         to: email,
         from: getMailFrom(),
         subject: 'Recuperação de senha - Casa Só Pimenta',
@@ -325,7 +324,7 @@ export async function forgotPassword(req, res) {
       });
       console.log('Email de recuperação enviado com sucesso');
     } catch (err) {
-      console.error('Erro SendGrid:', err.message);
+      console.error('Erro ao enviar email de recuperação:', err.message);
       return res.status(500).json({
         message: 'Erro ao enviar email.'
       });

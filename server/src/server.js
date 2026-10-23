@@ -22,6 +22,7 @@ import settingsRoutes from './routes/settingsRoutes.js';
 import melhorEnvioRoutes from './routes/melhorEnvioRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
 import { getMpPublicKey } from './controllers/paymentController.js';
+import { getSitemap } from './controllers/seoController.js';
 
 import { createTables } from './database/schema.js';
 import { seedDatabase } from './database/seed.js';
@@ -93,6 +94,8 @@ app.use('/api/melhor-envio', melhorEnvioRoutes);
 app.use('/api/cart', cartRoutes);
 
 app.get('/api/config/mp-key', getMpPublicKey);
+
+app.get('/api/sitemap.xml', getSitemap);
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const siteDir = path.resolve(__dirname, '../../site');

@@ -25,7 +25,7 @@ function renderProductCard(prod) {
   return '<div class="cartao' + (disponivel ? '' : ' indisponivel') + '"' + (disponivel ? ' data-href="/site/pages/produtos/detalhe/index.html?id=' + prod.id + '"' : '') + '>' +
     (disponivel ? '' : '<div class="overlay-indisponivel"><span>Indisponível</span></div>') +
     '<img class="cartao-img" src="' + imgSrc + '" alt="' + escH(prod.name) + '" loading="lazy" decoding="async">' +
-    '<h1 class="cartao-h1">' + escH(prod.name) + '</h1>' +
+    '<h1 class="cartao-h1">' + (disponivel ? '<a class="cartao-link" href="/site/pages/produtos/detalhe/index.html?id=' + prod.id + '">' + escH(prod.name) + '</a>' : escH(prod.name)) + '</h1>' +
     '<div class="cartao-valor">' + precoHtml + '</div>' +
     '<div class="conteiner-botões-kit">' +
       '<button class="add-carrinho-botao"' + (disponivel ? ' data-product-id="' + prod.id + '" data-product-name="' + escH(prod.name) + '" data-product-price="' + venda + '" data-product-img="' + imgSrc + '" data-product-type="produto"' : ' disabled') + '><img src="/site/imgs/icones/carrinho.png" alt="Adicionar ao carrinho"></button>' +
@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       cartoesSection.innerHTML += '<div class="cartao" data-href="/site/pages/kits/detalhe/index.html?id=' + kit.id + '">' +
         '<img class="cartao-img" src="' + imgSrc + '" alt="' + escH(kit.name) + '" loading="lazy" decoding="async">' +
-        '<h1 class="cartao-h1">' + escH(kit.name) + '</h1>' +
+        '<h1 class="cartao-h1"><a class="cartao-link" href="/site/pages/kits/detalhe/index.html?id=' + kit.id + '">' + escH(kit.name) + '</a></h1>' +
         '<div class="cartao-valor"><p>R$</p><h3>' + valorFormatado + '</h3></div>' +
         produtosHtml +
         '<div class = "conteiner-botões-kit">' +

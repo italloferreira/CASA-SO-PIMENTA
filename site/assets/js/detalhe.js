@@ -20,10 +20,23 @@ document.addEventListener('DOMContentLoaded', function () {
   function renderizarProduto(produto) {
     var venda = produto.compare_price || produto.price;
     const valorFormatado = Number(venda).toFixed(2).replace('.', ',');
-    document.title = 'Casa Só Pimenta / ' + produto.name;
-
     const imgSrc = imgUrl(produto.image_url);
     const imagens = (produto.images && produto.images.length) ? produto.images : [produto.image_url];
+
+    if (window.aplicarSeoItem) {
+      window.aplicarSeoItem({
+        tipo: 'produto',
+        id: produto.id,
+        nome: produto.name,
+        descricao: produto.description,
+        preco: venda,
+        estoque: !!produto.stock,
+        imagens: imagens,
+        categoria: produto.category_name
+      });
+    } else {
+      document.title = produto.name + ' | Casa Só Pimenta';
+    }
 
     const ingredientes = produto.ingredients
       ? produto.ingredients.split(',').map(function (i) { return i.trim(); })
