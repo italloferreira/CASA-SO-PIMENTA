@@ -31,6 +31,8 @@ document.addEventListener('DOMContentLoaded', function () {
   var allLoaded = false;
   var sentinel = null;
   var observer = null;
+  var termoAtual = '';
+  var buscaId = 0;
 
   function estaDisponivel(produto) {
     return !!produto.stock && produto.is_active !== 0;
@@ -66,7 +68,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (sentinel) sentinel.remove();
     if (observer) observer.disconnect();
 
-    if (allLoaded) return;
+    // durante uma pesquisa a lista mostrada já é o resultado completo
+    if (allLoaded || termoAtual) return;
 
     sentinel = document.createElement('div');
     sentinel.className = 'sentinel';
@@ -109,13 +112,14 @@ document.addEventListener('DOMContentLoaded', function () {
         todosProdutos = todosProdutos.concat(data.products);
         total = data.total;
         allLoaded = todosProdutos.length >= total;
-
-        renderizarProdutos(todosProdutos);
         loading = false;
+
+        // não sobrescreve o resultado de uma pesquisa em andamento
+        if (!termoAtual) renderizarProdutos(todosProdutos);
         atualizarSentinel();
       })
       .catch(function () {
-        if (todosProdutos.length === 0) {
+        if (todosProdutos.length === 0 && !termoAtual) {
           produtosSection.innerHTML = '<p>Não foi possível carregar os produtos.</p>';
         }
         loading = false;
@@ -123,32 +127,56 @@ document.addEventListener('DOMContentLoaded', function () {
       });
   }
 
+  function normalizar(texto) {
+    return (texto || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  }
+
+  function filtrarPorNome(produtos, termo) {
+    var busca = normalizar(termo);
+    return produtos.filter(function (p) {
+      return normalizar(p.name).indexOf(busca) !== -1;
+    });
+  }
+
   function filterProducts(term) {
-    if (!term || term.trim().length === 0) {
+    termoAtual = (term || '').trim();
+    var id = ++buscaId;
+
+    if (!termoAtual) {
       renderizarProdutos(todosProdutos);
+      atualizarSentinel();
       return;
     }
-    var lower = term.trim().toLowerCase();
-    var filtered = todosProdutos.filter(function (p) {
-      return p.name.toLowerCase().indexOf(lower) !== -1
-        || (p.description && p.description.toLowerCase().indexOf(lower) !== -1);
-    });
-    if (filtered.length > 0) {
-      renderizarProdutos(filtered);
-    } else {
-      fetch(API_BASE + '/api/products/search?q=' + encodeURIComponent(term.trim()))
-        .then(function (r) { return r.json(); })
-        .then(function (results) {
-          if (results.length > 0) {
-            renderizarProdutos(results);
-          } else {
-            renderizarProdutos([]);
-          }
-        })
-        .catch(function () {
-          renderizarProdutos([]);
-        });
+
+    var locais = filtrarPorNome(todosProdutos, termoAtual);
+    atualizarSentinel();
+
+    // categoria inteira já carregada: o filtro local é completo
+    if (allLoaded) {
+      renderizarProdutos(locais);
+      return;
     }
+
+    if (locais.length > 0) {
+      renderizarProdutos(locais);
+    } else {
+      produtosSection.innerHTML = '<p>Buscando...</p>';
+    }
+
+    // senão, busca no servidor os produtos desta categoria que ainda não foram carregados
+    fetch(API_BASE + '/api/products/search?q=' + encodeURIComponent(termoAtual) + '&category=' + encodeURIComponent(categoria))
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function (results) {
+        if (id !== buscaId) return; // usuário já digitou outra coisa
+        renderizarProdutos(results);
+      })
+      .catch(function () {
+        if (id !== buscaId) return;
+        renderizarProdutos(locais);
+      });
   }
 
   var inputPesquisa = document.querySelector('.pesquisa');

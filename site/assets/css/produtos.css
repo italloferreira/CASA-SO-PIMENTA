@@ -240,7 +240,7 @@ input[type="search"]::-webkit-search-cancel-button {
 
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     flex-direction: column;
     cursor: pointer;
 }
@@ -292,7 +292,7 @@ input[type="search"]::-webkit-search-cancel-button {
     height: 10%;
     text-align: center;
 
-    font-size: 0.9rem;
+    font-size: 10px;
 }
 
 .cartao p{

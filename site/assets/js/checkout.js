@@ -647,8 +647,7 @@ window.atualizarResumo = function () {
   var total = subtotal + freteValor;
 
   if (metodoPagamento === 'pix') {
-    var taxaDesc = getPixDiscountRate();
-    var desconto = total * taxaDesc;
+    var desconto = calcularDescontoPix(subtotal);
     total = total - desconto;
     descontoLinha.style.display = '';
     descontoEl.textContent = '- ' + formatarPreco(desconto);
@@ -689,11 +688,16 @@ function getPixDiscountRate() {
   return 0.05;
 }
 
+// desconto PIX só sobre os produtos; o frete fica com o valor cheio
+function calcularDescontoPix(subtotal) {
+  return Math.round(subtotal * getPixDiscountRate() * 100) / 100;
+}
+
 function getTotalFinal() {
   var subtotal = calcularSubtotal();
   var freteValor = freteSelecionado ? freteSelecionado.valor : 0;
   var total = subtotal + freteValor;
-  if (metodoPagamento === 'pix') total = total - (total * getPixDiscountRate());
+  if (metodoPagamento === 'pix') total = total - calcularDescontoPix(subtotal);
   if (cupomAplicado && cupomAplicado.discount_calculated > 0) {
     total = total - cupomAplicado.discount_calculated;
     if (total < 0) total = 0;
@@ -754,7 +758,7 @@ function criarPedidoEProcessarPagamento() {
   carrinho.forEach(function (item) { subtotal += Number(item.valor) * item.quantidade; });
   var freteValor = freteSelecionado ? freteSelecionado.valor : 0;
   var total = subtotal + freteValor;
-  if (metodoPagamento === 'pix') total = total - (total * getPixDiscountRate());
+  if (metodoPagamento === 'pix') total = total - calcularDescontoPix(subtotal);
 
   var items = carrinho.map(function (item) {
     var isKit = item.tipo === 'kit';

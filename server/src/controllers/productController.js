@@ -283,13 +283,22 @@ export async function updateProduct(req, res) {
 
 export async function searchProducts(req, res) {
   try {
-    const { q } = req.query;
+    const { q, category } = req.query;
 
-    if (!q || q.trim().length === 0) {
+    if (typeof q !== 'string' || q.trim().length === 0) {
       return res.status(400).json({ message: 'Termo de busca é obrigatório.' });
     }
 
-    const searchTerm = `%${q.trim()}%`;
+    // Busca apenas pelo nome, sem diferenciar maiúsculas/acentos.
+    // % _ e \ digitados pelo usuário são tratados como texto, não como curinga.
+    const termoEscapado = q.trim().replace(/[\\%_]/g, '\\$&');
+    const params = [`%${termoEscapado}%`];
+
+    let categoryClause = '';
+    if (typeof category === 'string' && category.trim().length > 0) {
+      params.push(category.trim());
+      categoryClause = `AND categories.slug = $${params.length}`;
+    }
 
     const result = await pool.query(`
       SELECT
@@ -299,14 +308,11 @@ export async function searchProducts(req, res) {
       FROM products
       LEFT JOIN categories ON categories.id = products.category_id
       WHERE products.is_active = 1
-      AND (
-        products.name ILIKE $1
-        OR products.description ILIKE $1
-        OR products.ingredients ILIKE $1
-        OR categories.name ILIKE $1
-      )
-      ORDER BY products.created_at DESC
-    `, [searchTerm]);
+      AND translate(lower(products.name), 'áàâãäåéèêëíìîïóòôõöúùûüç', 'aaaaaaeeeeiiiiooooouuuuc')
+          LIKE translate(lower($1), 'áàâãäåéèêëíìîïóòôõöúùûüç', 'aaaaaaeeeeiiiiooooouuuuc')
+      ${categoryClause}
+      ORDER BY translate(lower(products.name), 'áàâãäåéèêëíìîïóòôõöúùûüç', 'aaaaaaeeeeiiiiooooouuuuc') ASC
+    `, params);
 
     res.json(result.rows);
   } catch (err) {

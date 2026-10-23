@@ -350,16 +350,20 @@ main {
 }
 
 /* Ações */
+/* Quantidade e "Adicionar ao carrinho" sempre lado a lado */
 .produto-acoes {
   display: flex;
-  align-items: center;
-  gap: 20px;
-  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 12px;
+  flex-wrap: nowrap;
+  width: 100%;
+  max-width: 460px;
 }
 
 .produto-quantidade {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
   gap: 0;
   border: 2px solid var(--cor-cinza-borda);
   border-radius: 8px;
@@ -388,10 +392,13 @@ main {
 }
 
 .btn-add-carrinho {
+  flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  padding: 12px 28px;
+  padding: 12px 20px;
   border: none;
   border-radius: 8px;
   background: transparent;
@@ -758,6 +765,10 @@ footer p {
     max-width: 100%;
   }
 
+  .produto-acoes {
+    max-width: 100%;
+  }
+
   header {
     width: 100%;
     left: 0;
@@ -1056,5 +1067,35 @@ footer p {
         width: 90%;
         height: 100px;
         text-align: center;
+    }
+}
+
+/* ===== CELULARES PEQUENOS (≤ 480px) ===== */
+@media (max-width: 480px) {
+
+    .produto-acoes {
+      gap: 8px;
+    }
+
+    .produto-quantidade button {
+      width: 34px;
+    }
+
+    .produto-quantidade span {
+      min-width: 36px;
+      font-size: 16px;
+    }
+
+    .btn-add-carrinho {
+      padding: 10px 12px;
+      gap: 6px;
+      font-size: 14px;
+      line-height: 1.2;
+    }
+
+    .btn-add-carrinho img {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
     }
 }

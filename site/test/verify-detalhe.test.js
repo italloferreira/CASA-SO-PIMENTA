@@ -53,7 +53,7 @@ test('produtos.css estiliza a badge de medida no desktop e no mobile', () => {
   const blocosBadge = css.match(/\.cartao p\.unidade-de-medida\s*\{[\s\S]*?\}/g) || [];
   assert.ok(blocosBadge.length >= 2, 'badge deve ter regra no desktop e no media query mobile (veio ' + blocosBadge.length + ')');
 
-  assert.ok(blocosBadge.some(function (b) { return /font-size:\s*14px/.test(b); }), 'badge desktop deve ter font-size 14px');
+  assert.ok(blocosBadge.some(function (b) { return /font-size:\s*15px/.test(b); }), 'badge desktop deve ter font-size 15px');
   assert.ok(blocosBadge.some(function (b) { return /font-size:\s*12px/.test(b); }), 'badge mobile deve ter font-size 12px');
 });
 

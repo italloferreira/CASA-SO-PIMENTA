@@ -7,6 +7,7 @@ import { selectBox } from '../config/boxes.js';
 import { getAccessToken } from './melhorEnvioController.js';
 import { calculateCartWeight } from '../utils/cartWeight.js';
 import { getMailFrom } from '../utils/mailFrom.js';
+import { calcularValorPix } from '../utils/pixDiscount.js';
 import crypto from 'crypto';
 
 function generatePickupCode() {
@@ -347,8 +348,20 @@ export async function createOrder(req, res) {
         delivery_fee: Number(orderData.delivery_fee),
         total: Number(orderData.total),
         coupon_code: orderData.coupon_code,
-        coupon_discount: orderData.coupon_discount ? Number(orderData.coupon_discount) : 0
+        coupon_discount: orderData.coupon_discount ? Number(orderData.coupon_discount) : 0,
+        pix_discount: 0
       };
+
+      // o email sai antes de o PIX ser gerado; mostra o mesmo valor que será cobrado no QR Code
+      if (orderForEmail.payment_method === 'pix') {
+        const pixSetting = await pool.query("SELECT value FROM settings WHERE key = 'pix_discount_percent'");
+        const pixDiscountPercent = Number(pixSetting.rows[0]?.value) || 0;
+        if (pixDiscountPercent > 0) {
+          const pix = calcularValorPix(orderData, pixDiscountPercent);
+          orderForEmail.pix_discount = pix.descontoPix;
+          orderForEmail.total = pix.total;
+        }
+      }
 
       const fromAddr = getMailFrom();
 

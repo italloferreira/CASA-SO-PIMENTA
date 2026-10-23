@@ -903,6 +903,7 @@ main {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  width: 50%;
 }
 
 .resumo-item-qtd {
@@ -947,12 +948,10 @@ main {
   font-size: 24px;
 }
 
-.selos-seguranca resumo-selos{
+.selos-seguranca.resumo-selos {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 1000
-  0px;
 }
 
 
@@ -1543,18 +1542,30 @@ footer p { font-size: 15px; color: var(--cor-footer-texto);}
       width: 100%;
     }
 
-    .checkout-resumo-col{
-      order: 0;
-    }
-
     .checkout-layout{
       order: 1;
       width: 100%;
-      height: 100%;
       display: flex;
-      justify-content: center;
-      align-items: center;
       flex-direction: column;
+      align-items: stretch;
+    }
+
+    /* Colunas ocupam a largura da tela em vez de crescer até o conteúdo */
+    .checkout-form-col,
+    .checkout-resumo-col{
+      flex: none;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .checkout-resumo-col{
+      order: 0;
+      position: static;
+    }
+
+    .resumo-item-nome{
+      width: auto;
     }
 
 
@@ -1618,5 +1629,58 @@ footer p { font-size: 15px; color: var(--cor-footer-texto);}
         width: 90%;
         height: 100px;
         text-align: center;
+    }
+}
+
+/* ===== CELULARES PEQUENOS (≤ 480px) ===== */
+@media (max-width: 480px) {
+
+    .checkout-container {
+      width: 100%;
+      padding: 0 12px;
+    }
+
+    .checkout-resumo {
+      padding: 16px;
+    }
+
+    .resumo-item {
+      gap: 10px;
+    }
+
+    .resumo-linha {
+      gap: 12px;
+      font-size: 13px;
+    }
+
+    .resumo-linha span:last-child {
+      text-align: right;
+    }
+
+    .resumo-total {
+      font-size: 17px;
+    }
+
+    .resumo-total span:last-child {
+      font-size: 20px;
+    }
+
+    /* Input não pode empurrar o botão para fora da tela */
+    .cupom-input-row input {
+      min-width: 0;
+    }
+
+    .selo-mercado-pago {
+      flex-wrap: wrap;
+      text-align: center;
+    }
+
+    .bandeiras {
+      gap: 8px;
+    }
+
+    .bandeiras img {
+      width: 40px;
+      max-width: 22%;
     }
 }

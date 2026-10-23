@@ -1,6 +1,9 @@
-import { test } from 'node:test';
+import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { pool } from '../src/database/connection.js';
+
+// fecha a conexão com o banco; sem isso o processo de teste nunca termina
+after(() => pool.end());
 
 async function getCategoryBySlug(slug) {
   const result = await pool.query(
@@ -73,9 +76,15 @@ test('molhos possui produtos vinculados (herdados de pimentas)', async () => {
   assert.ok(total >= 1, 'molhos deveria ter produtos, total=' + total);
 });
 
-test('outros foi preservado com seus produtos', async () => {
-  const outros = await getCategoryBySlug('outros');
-  assert.ok(outros, 'categoria outros ausente');
-  const total = await countProducts(outros.id);
-  assert.ok(total >= 1, 'outros deveria ter produtos, total=' + total);
+test('nenhuma categoria desativada esconde produtos ativos da loja', async () => {
+  // produtos de categoria desativada (ex.: "outros", que virou só grupo do menu) somem do site
+  const result = await pool.query(`
+    SELECT categories.slug, COUNT(*) AS total
+    FROM products
+    JOIN categories ON categories.id = products.category_id
+    WHERE categories.is_active = 0 AND products.is_active = 1
+    GROUP BY categories.slug
+  `);
+  const ocultos = result.rows.map((r) => r.slug + ' (' + r.total + ')');
+  assert.deepEqual(ocultos, [], 'categorias desativadas com produtos ativos: ' + ocultos.join(', '));
 });

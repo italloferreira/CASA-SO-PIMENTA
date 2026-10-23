@@ -52,7 +52,8 @@ test('categorias novas e renomeadas estão presentes na API', () => {
 
 test('categorias inalteradas continuam na API', () => {
   const names = categories.map((c) => c.name);
-  for (const expected of ['Temperos', 'Farinhas', 'Castanhas', 'Chás', 'Outros', 'Kits']) {
+  // "Outros" deixou de ser categoria ativa: virou apenas o grupo do menu (Açúcares, Granjeados...)
+  for (const expected of ['Temperos', 'Farinhas', 'Castanhas', 'Chás', 'Kits']) {
     assert.ok(names.includes(expected), 'categoria inalterada ausente: ' + expected);
   }
 });

@@ -1,6 +1,7 @@
 import { MercadoPagoConfig, Payment, WebhookSignatureValidator, InvalidWebhookSignatureError } from 'mercadopago';
 import { pool } from '../database/connection.js';
 import crypto from 'crypto';
+import { calcularValorPix } from '../utils/pixDiscount.js';
 
 function getAccessToken() {
   return process.env.NODE_ENV === 'production'
@@ -228,7 +229,7 @@ export async function processPix(req, res) {
     const pixDiscountPercent = Number(pixSetting.rows[0]?.value) || 0;
     const orderTotal = Number(order.total);
     const amount = pixDiscountPercent > 0
-      ? orderTotal * (1 - pixDiscountPercent / 100)
+      ? calcularValorPix(order, pixDiscountPercent).total
       : orderTotal;
 
     const result = await createOrder({

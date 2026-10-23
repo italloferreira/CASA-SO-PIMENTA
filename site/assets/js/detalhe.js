@@ -60,20 +60,6 @@ document.addEventListener('DOMContentLoaded', function () {
             <p class="${produto.stock ? 'estoque-disponivel' : 'estoque-indisponivel'}">${produto.stock ? 'Disponível' : 'Indisponível'}</p>
           </div>
 
-          <div class="produto-descricao">
-            <h3>Descrição</h3>
-            <p>${escHtml(produto.description || 'Produto natural de alta qualidade, selecionado com cuidado pela Casa Só Pimenta.')}</p>
-          </div>
-
-          ${ingredientes.length > 0 ? `
-          <div class="produto-ingredientes">
-            <h3>Ingredientes</h3>
-            <ul>
-              ${ingredientes.map(function (ing) { return '<li>' + escHtml(ing) + '</li>'; }).join('')}
-            </ul>
-          </div>
-          ` : ''}
-
           <div class="produto-acoes">
             <div class="produto-quantidade">
               <button onclick="decrementarQtd()">−</button>
@@ -85,6 +71,20 @@ document.addEventListener('DOMContentLoaded', function () {
               <img src="/site/imgs/icones/carrinho.png" alt="Carrinho">
               ${produto.stock ? 'Adicionar ao carrinho' : 'Indisponível'}
             </button>
+          </div>
+
+          ${ingredientes.length > 0 ? `
+          <div class="produto-ingredientes">
+            <h3>Ingredientes</h3>
+            <ul>
+              ${ingredientes.map(function (ing) { return '<li>' + escHtml(ing) + '</li>'; }).join('')}
+            </ul>
+          </div>
+          ` : ''}
+
+          <div class="produto-descricao">
+            <h3>Descrição</h3>
+            <p>${escHtml(produto.description || 'Produto natural de alta qualidade, selecionado com cuidado pela Casa Só Pimenta.')}</p>
           </div>
 
           <a href="javascript:history.back()" class="btn-voltar">← Voltar</a>
