@@ -33,6 +33,77 @@ function limparErros() {
   document.querySelectorAll(".erro-msg").forEach(el => el.textContent = "");
 }
 
+function concluirLogin(data) {
+  data.user.token = data.token;
+  localStorage.setItem("csp_admin_user", JSON.stringify(data.user));
+  var params = new URLSearchParams(window.location.search);
+  var redirect = params.get('redirect');
+  if (data.user.role === "admin") {
+    window.location.href = "/site/pages/admin/index.html";
+  } else if (redirect === 'checkout') {
+    window.location.href = "/site/pages/checkout/index.html";
+  } else {
+    window.location.href = "/site/pages/index.html";
+  }
+}
+
+/* LOGIN COM GOOGLE */
+function secaoAtiva() {
+  var ativa = document.querySelector(".campos.ativo");
+  return ativa ? ativa.id : "login";
+}
+
+function onGoogleCredential(response) {
+  limparErros();
+  fetch((window.API_BASE_URL || 'http://localhost:3333') + '/api/auth/google', {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ credential: response.credential })
+  })
+  .then(function (res) {
+    return res.json().then(function (data) {
+      if (!res.ok) throw new Error(data.message || "Erro ao entrar com Google. Tente novamente.");
+      return data;
+    });
+  })
+  .then(concluirLogin)
+  .catch(function (err) {
+    mostrarErro(secaoAtiva(), err.message);
+  });
+}
+
+function iniciarGoogle() {
+  fetch((window.API_BASE_URL || 'http://localhost:3333') + '/api/auth/google/config')
+    .then(function (res) { return res.ok ? res.json() : null; })
+    .then(function (config) {
+      if (!config || !config.clientId) return;
+
+      var script = document.createElement("script");
+      script.src = "https://accounts.google.com/gsi/client";
+      script.async = true;
+      script.onload = function () {
+        google.accounts.id.initialize({
+          client_id: config.clientId,
+          callback: onGoogleCredential,
+          locale: "pt-BR"
+        });
+        document.querySelectorAll(".google-login").forEach(function (bloco) {
+          bloco.hidden = false;
+          var alvo = bloco.querySelector(".google-btn");
+          google.accounts.id.renderButton(alvo, {
+            theme: "outline",
+            size: "large",
+            shape: "rectangular",
+            text: alvo.dataset.text,
+            width: 300
+          });
+        });
+      };
+      document.head.appendChild(script);
+    })
+    .catch(function () { /* API fora do ar: apenas não exibe o botão */ });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   const btnLogin    = document.querySelector("#login .btn");
   const btnCadastro = document.querySelector("#cadastro .btn");
@@ -41,6 +112,8 @@ document.addEventListener("DOMContentLoaded", function () {
   if (pageParams.get('expired') === '1') {
     mostrarErro("login", "Sua sessão expirou. Faça login novamente para continuar.");
   }
+
+  iniciarGoogle();
 
   /* LOGIN EMAIL/SENHA */
   btnLogin.addEventListener("click", function (e) {
@@ -74,19 +147,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       return res.json();
     })
-    .then(function (data) {
-      data.user.token = data.token;
-      localStorage.setItem("csp_admin_user", JSON.stringify(data.user));
-      var params = new URLSearchParams(window.location.search);
-      var redirect = params.get('redirect');
-      if (data.user.role === "admin") {
-        window.location.href = "/site/pages/admin/index.html";
-      } else if (redirect === 'checkout') {
-        window.location.href = "/site/pages/checkout/index.html";
-      } else {
-        window.location.href = "/site/pages/index.html";
-      }
-    })
+    .then(concluirLogin)
     .catch(function (err) {
       mostrarErro("login", err.message);
     })

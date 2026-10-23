@@ -280,6 +280,44 @@ main {
     background: var(--cor-vermelho-hover);
 }
 
+/* LOGIN COM GOOGLE */
+.google-divisor {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 16px 0;
+    font-size: 13px;
+    color: var(--cor-cinza-texto-secundario);
+}
+
+.google-divisor::before,
+.google-divisor::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.3;
+}
+
+.google-btn {
+    display: flex;
+    justify-content: center;
+    min-height: 44px;
+}
+
+.google-aviso {
+    margin-top: 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    text-align: center;
+    color: var(--cor-cinza-texto-secundario);
+}
+
+.google-aviso a {
+    color: var(--cor-vermelho-primario);
+    text-decoration: underline;
+}
+
 /* TEXTO EXTRA */
 .extra {
     margin-top: 15px;

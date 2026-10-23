@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import sgMail from '@sendgrid/mail';
+import { OAuth2Client } from 'google-auth-library';
 import { pool } from '../database/connection.js';
 import { forgotPasswordEmail } from '../utils/emailTemplates.js';
 import { getMailFrom } from '../utils/mailFrom.js';
@@ -91,6 +92,10 @@ export async function login(req, res) {
 
   await pool.query(`DELETE FROM login_attempts WHERE email = $1`, [email]);
 
+  sendSession(res, user);
+}
+
+function sendSession(res, user) {
   const token = jwt.sign(
     {
       id: user.id,
@@ -123,6 +128,79 @@ export async function login(req, res) {
       role: user.role
     }
   });
+}
+
+let googleClient = null;
+
+function getGoogleClient() {
+  if (!googleClient) googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+  return googleClient;
+}
+
+export function getGoogleConfig(req, res) {
+  res.json({ clientId: process.env.GOOGLE_CLIENT_ID || null });
+}
+
+export async function googleLogin(req, res) {
+  const { credential } = req.body;
+
+  if (!process.env.GOOGLE_CLIENT_ID) {
+    return res.status(503).json({ message: 'Login com Google não está configurado.' });
+  }
+
+  if (!credential) {
+    return res.status(400).json({ message: 'Credencial do Google não informada.' });
+  }
+
+  let payload;
+  try {
+    const ticket = await getGoogleClient().verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID
+    });
+    payload = ticket.getPayload();
+  } catch (err) {
+    console.error('Token Google inválido:', err.message);
+    return res.status(401).json({ message: 'Não foi possível validar o login com Google.' });
+  }
+
+  if (!payload || !payload.email || !payload.email_verified) {
+    return res.status(401).json({ message: 'Email do Google não verificado.' });
+  }
+
+  const googleId = payload.sub;
+  const email = payload.email.toLowerCase();
+
+  const result = await pool.query(`
+    SELECT * FROM users WHERE google_id = $1 OR LOWER(email) = $2
+    ORDER BY (google_id = $1) DESC NULLS LAST
+    LIMIT 1
+  `, [googleId, email]);
+
+  let user = result.rows[0];
+
+  if (user && user.role === 'admin') {
+    return res.status(403).json({ message: 'Administradores devem entrar com email e senha.' });
+  }
+
+  if (user && !user.google_id) {
+    await pool.query(`
+      UPDATE users SET google_id = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2
+    `, [googleId, user.id]);
+  }
+
+  if (!user) {
+    // senha aleatória inutilizável; o cliente pode definir uma via "esqueci minha senha"
+    const randomPassword = await bcrypt.hash(crypto.randomBytes(32).toString('hex'), 10);
+    const inserted = await pool.query(`
+      INSERT INTO users (name, email, password, google_id)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *
+    `, [payload.name || email.split('@')[0], email, randomPassword, googleId]);
+    user = inserted.rows[0];
+  }
+
+  sendSession(res, user);
 }
 
 export async function logout(req, res) {

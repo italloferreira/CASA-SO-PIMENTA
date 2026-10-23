@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { register, login, logout, getProfile, updateProfile, forgotPassword, resetPassword } from '../controllers/authController.js';
+import { register, login, googleLogin, getGoogleConfig, logout, getProfile, updateProfile, forgotPassword, resetPassword } from '../controllers/authController.js';
 import { authMiddleware } from '../middlewares/authMiddleware.js';
 import { authLimiter, strictAuthLimiter } from '../middlewares/rateLimiter.js';
 
@@ -7,6 +7,8 @@ const router = Router();
 
 router.post('/register', authLimiter, register);
 router.post('/login', strictAuthLimiter, login);
+router.post('/google', authLimiter, googleLogin);
+router.get('/google/config', getGoogleConfig);
 router.post('/logout', logout);
 router.get('/profile', authMiddleware, getProfile);
 router.get('/me', authMiddleware, getProfile);
