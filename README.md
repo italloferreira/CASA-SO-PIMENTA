@@ -62,6 +62,7 @@ Mais do que uma loja virtual, o projeto funciona como uma base completa para ven
 - [x] **Catálogo de produtos** com filtros por categoria, destaque e busca
 - [x] **Detalhes do produto** com imagens, descrição, ingredientes e variações por peso (produtos a granel)
 - [x] **Kits promocionais** com composição detalhada
+- [x] **Produtos semelhantes** na página do produto (mesma categoria, palavras do nome, marca e faixa de preço; só itens em estoque)
 - [x] **Carrinho de compras** com persistência (autenticado ou anônimo)
 - [x] **Autenticação** (cadastro, login, recuperação de senha)
 - [x] **Finalização de pedido** com cálculo automático de frete
@@ -310,6 +311,7 @@ Detalhes do schema: `server/src/database/schema.js`
 | POST | `/api/auth/reset-password` | Redefinir senha | Público |
 | GET | `/api/products` | Listar produtos | Público |
 | GET | `/api/products/:slug` | Detalhes do produto | Público |
+| GET | `/api/products/:id/similar?limit=8` | Produtos semelhantes (máx. 12) | Público |
 | GET | `/api/kits` | Listar kits | Público |
 | GET | `/api/categories` | Listar categorias | Público |
 | GET/POST/PUT/DELETE | `/api/cart` | Carrinho | Opcional |

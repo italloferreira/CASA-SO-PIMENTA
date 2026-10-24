@@ -1,4 +1,5 @@
 import { pool } from '../database/connection.js';
+import { rankearSemelhantes } from '../utils/similarity.js';
 
 export async function listProducts(req, res) {
   try {
@@ -101,6 +102,56 @@ export async function getProductById(req, res) {
   } catch (err) {
     console.error('Erro ao buscar produto:', err);
     res.status(500).json({ message: 'Erro ao buscar produto.' });
+  }
+}
+
+// Produto base esgotado ou inativo continua recebendo sugestões: é quando elas mais ajudam
+export async function getSimilarProducts(req, res) {
+  try {
+    const { id } = req.params;
+
+    // até 9 dígitos: cabe no INTEGER do Postgres
+    if (!/^\d{1,9}$/.test(id)) {
+      return res.status(400).json({ message: 'ID de produto inválido.' });
+    }
+
+    const limite = Math.min(Math.max(parseInt(req.query.limit) || 8, 1), 12);
+
+    const baseResult = await pool.query(`
+      SELECT
+        products.id, products.name, products.price, products.compare_price, products.category_id,
+        categories.name AS category_name,
+        categories.slug AS category_slug
+      FROM products
+      LEFT JOIN categories ON categories.id = products.category_id
+      WHERE products.id = $1
+    `, [id]);
+
+    const base = baseResult.rows[0];
+
+    if (!base) {
+      return res.status(404).json({ message: 'Produto não encontrado.' });
+    }
+
+    const candidatos = await pool.query(`
+      SELECT
+        products.id, products.name, products.price, products.compare_price, products.image_url,
+        products.stock, products.is_active, products.category_id,
+        categories.name AS category_name,
+        categories.slug AS category_slug
+      FROM products
+      LEFT JOIN categories ON categories.id = products.category_id
+      WHERE products.is_active = 1 AND products.stock = true AND products.id <> $1
+    `, [id]);
+
+    res.json({
+      category_slug: base.category_slug,
+      category_name: base.category_name,
+      products: rankearSemelhantes(base, candidatos.rows, limite)
+    });
+  } catch (err) {
+    console.error('Erro ao buscar produtos semelhantes:', err);
+    res.status(500).json({ message: 'Erro ao buscar produtos semelhantes.' });
   }
 }
 

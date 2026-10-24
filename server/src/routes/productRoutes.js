@@ -4,6 +4,7 @@ import { authMiddleware, adminMiddleware, optionalAuth } from '../middlewares/au
 import {
   listProducts,
   getProductById,
+  getSimilarProducts,
   searchProducts,
   createProduct,
   updateProduct,
@@ -17,6 +18,7 @@ const router = Router();
 router.get('/', optionalAuth, listProducts);
 router.get('/search', searchProducts);
 router.get('/status', getProductsStatus);
+router.get('/:id/similar', getSimilarProducts);
 router.get('/:id', getProductById);
 router.post('/', authMiddleware, adminMiddleware, adminLimiter, createProduct);
 router.put('/:id', authMiddleware, adminMiddleware, adminLimiter, updateProduct);

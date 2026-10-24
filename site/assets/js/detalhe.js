@@ -5,6 +5,107 @@ var escHtml = window.escapeHtml || function (s) { return s ? String(s).replace(/
 /* categorias vendidas a granel — fonte unica definida em config.js */
 var CATEGORIAS_COM_MEDIDA_100G = window.CATEGORIAS_GRANEL_100G || [];
 
+function badgeMedida(categoriaSlug) {
+  return CATEGORIAS_COM_MEDIDA_100G.indexOf(categoriaSlug) !== -1 ? '<p class="unidade-de-medida">100g</p>' : '';
+}
+
+/* ── Produtos semelhantes: carregam em paralelo ao produto; a seção só aparece se houver resultado ── */
+
+var SEMELHANTES_VALIDADE = 5 * 60 * 1000;
+
+function precoFormatado(valor) {
+  return 'R$ ' + Number(valor).toFixed(2).replace('.', ',');
+}
+
+// alt vazio: o nome do produto já está escrito no card
+function cartaoSemelhante(p) {
+  var venda = p.compare_price || p.price;
+  return '<a class="semelhante-card" href="/site/pages/produtos/detalhe/index.html?id=' + encodeURIComponent(p.id) + '">' +
+    '<img src="' + escHtml(imgUrl(p.image_url)) + '" alt="" loading="lazy" decoding="async">' +
+    '<span class="semelhante-nome">' + escHtml(p.name) + '</span>' +
+    '<span class="semelhante-preco">' + (p.compare_price ? '<s>' + precoFormatado(p.price) + '</s>' : '') + precoFormatado(venda) + '</span>' +
+    badgeMedida(p.category_slug) +
+  '</a>';
+}
+
+function skeletonSemelhantes(qtd) {
+  var html = '';
+  for (var i = 0; i < qtd; i++) {
+    html += '<div class="semelhante-card semelhante-skeleton" aria-hidden="true">' +
+      '<span class="skeleton skeleton-semelhante-img"></span>' +
+      '<span class="skeleton skeleton-texto"></span>' +
+      '<span class="skeleton skeleton-texto curto"></span>' +
+    '</div>';
+  }
+  return html;
+}
+
+function carregarSemelhantes(produtoId) {
+  var secao = document.getElementById('produtos-semelhantes');
+  var lista = document.getElementById('semelhantesLista');
+  var verTodos = document.getElementById('semelhantesVerTodos');
+  if (!secao || !lista) return;
+
+  function esconder() {
+    secao.hidden = true;
+    lista.innerHTML = '';
+  }
+
+  function renderizar(dados) {
+    var produtos = (dados && Array.isArray(dados.products) ? dados.products : [])
+      .filter(function (p) { return String(p.id) !== String(produtoId); });
+
+    if (produtos.length === 0) {
+      esconder();
+      return;
+    }
+
+    lista.innerHTML = produtos.map(cartaoSemelhante).join('');
+
+    var paginaCategoria = (window.PAGINAS_CATEGORIA || {})[dados.category_slug];
+    if (verTodos) {
+      verTodos.hidden = !(paginaCategoria && dados.category_name);
+      if (!verTodos.hidden) {
+        verTodos.href = paginaCategoria;
+        verTodos.textContent = 'Ver todos em ' + dados.category_name + ' →';
+      }
+    }
+
+    secao.hidden = false;
+  }
+
+  var chaveCache = 'semelhantes_v1_' + produtoId + '_cache';
+  var chaveTempo = 'semelhantes_v1_' + produtoId + '_timestamp';
+
+  // cache corrompido não pode impedir a página de carregar: só busca de novo
+  try {
+    var cacheSalvo = localStorage.getItem(chaveCache);
+    var tempoSalvo = localStorage.getItem(chaveTempo);
+    if (cacheSalvo && tempoSalvo && (Date.now() - Number(tempoSalvo) < SEMELHANTES_VALIDADE)) {
+      renderizar(JSON.parse(cacheSalvo));
+      return;
+    }
+  } catch (e) { /* segue para o fetch */ }
+
+  lista.innerHTML = skeletonSemelhantes(4);
+  secao.hidden = false;
+
+  fetch((window.API_BASE_URL || 'http://localhost:3333') + '/api/products/' + encodeURIComponent(produtoId) + '/similar?limit=8')
+    .then(function (r) {
+      // erro ou API sem o endpoint (deploy antigo): a seção apenas não aparece
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(function (dados) {
+      renderizar(dados);
+      try {
+        localStorage.setItem(chaveCache, JSON.stringify(dados));
+        localStorage.setItem(chaveTempo, String(Date.now()));
+      } catch (e) { /* sem espaço no localStorage: fica sem cache */ }
+    })
+    .catch(esconder);
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   const params = new URLSearchParams(window.location.search);
   const produtoId = params.get('id');
@@ -16,6 +117,8 @@ document.addEventListener('DOMContentLoaded', function () {
     container.innerHTML = '<p class="erro-produto">Produto não encontrado.</p>';
     return;
   }
+
+  carregarSemelhantes(produtoId);
 
   function renderizarProduto(produto) {
     var venda = produto.compare_price || produto.price;
@@ -65,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
           <div class="div-preço-e-qual-unidade"> 
             ${produto.compare_price ? '<p class="produto-preco-antigo">R$ ' + Number(produto.price).toFixed(2).replace('.', ',') + '</p>' : ''}
             <p class="produto-preco">R$ ${valorFormatado}</p> 
-            ${CATEGORIAS_COM_MEDIDA_100G.indexOf(produto.category_slug) !== -1 ? '<p class="unidade-de-medida">100g</p>' : ''}
+            ${badgeMedida(produto.category_slug)}
           </div>
 
           <div class="produto-estoque">
@@ -85,6 +188,8 @@ document.addEventListener('DOMContentLoaded', function () {
               ${produto.stock ? 'Adicionar ao carrinho' : 'Indisponível'}
             </button>
           </div>
+
+          ${!produto.stock ? '<a href="#produtos-semelhantes" class="link-semelhantes">Ver opções semelhantes disponíveis ↓</a>' : ''}
 
           ${ingredientes.length > 0 ? `
           <div class="produto-ingredientes">

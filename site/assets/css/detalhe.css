@@ -178,6 +178,9 @@ main {
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  /* "Produtos semelhantes" quebra para a linha de baixo do produto */
+  flex-wrap: wrap;
+  align-content: flex-start;
 }
 
 #produto-detalhe {
@@ -246,6 +249,127 @@ main {
 
 .produto-miniatura.ativa {
   border-color: var(--cor-vermelho-primario);
+}
+
+/* Produtos semelhantes (sem "display" aqui: o atributo hidden precisa continuar escondendo a seção) */
+.semelhantes {
+  width: 90%;
+  max-width: 1100px;
+  margin-top: 56px;
+}
+
+.semelhantes-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.semelhantes-topo h2 {
+  font-size: 1.4rem;
+  color: var(--cor-preto);
+}
+
+.semelhantes-ver-todos {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cor-vermelho-primario);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.semelhantes-ver-todos:hover {
+  text-decoration: underline;
+}
+
+.semelhantes-lista {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.semelhante-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 16px;
+  background: var(--cor-branco);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  color: var(--cor-preto);
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.semelhante-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.semelhante-card img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+.semelhante-nome {
+  padding: 0 14px;
+  font-size: 14px;
+  line-height: 1.35;
+  min-height: 2.7em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.semelhante-preco {
+  padding: 0 14px;
+  font-weight: 700;
+  color: var(--cor-verde-primario);
+}
+
+.semelhante-preco s {
+  margin-right: 6px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--cor-cinza-texto-secundario);
+}
+
+.semelhante-card .unidade-de-medida {
+  padding: 0 14px;
+  font-size: 12px;
+}
+
+.semelhante-skeleton .skeleton-semelhante-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 0;
+}
+
+.semelhante-skeleton .skeleton-texto {
+  width: auto;
+  margin: 0 14px;
+}
+
+.semelhante-skeleton .skeleton-texto.curto {
+  width: 40%;
+}
+
+/* Link do produto esgotado: só aparece se a seção de semelhantes tiver cards de verdade */
+.link-semelhantes {
+  display: none;
+  align-self: flex-start;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cor-vermelho-primario);
+}
+
+body:has(#produtos-semelhantes:not([hidden]) .semelhante-card:not(.semelhante-skeleton)) .link-semelhantes {
+  display: inline-block;
 }
 
 /* Skeleton: mesma estrutura do .produto-detalhe-card real */
@@ -792,6 +916,35 @@ footer p {
 
   .produto-acoes {
     max-width: 100%;
+  }
+
+  /* semelhantes viram uma fileira com rolagem lateral; o próximo card aparece cortado */
+  .semelhantes {
+    margin-top: 40px;
+  }
+
+  .semelhantes-topo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .semelhantes-topo h2 {
+    font-size: 1.2rem;
+  }
+
+  .semelhantes-lista {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 42%;
+    gap: 14px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 10px;
+  }
+
+  .semelhante-card {
+    scroll-snap-align: start;
   }
 
   /* em coluna o skeleton não tem conteúdo que defina largura/altura */
