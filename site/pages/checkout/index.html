@@ -379,7 +379,11 @@
                   <div class="frete-opcoes" id="freteOpcoes" style="display:none;">
                     <h3>Opções de frete</h3>
                     <div id="freteLista"></div>
-                    <div id="freteLoading" style="display:none;padding:12px;text-align:center;color:var(--cor-cinza-texto-secundario);">Calculando frete...</div>
+                    <div id="freteLoading" style="display:none;">
+                      <span class="sr-only">Calculando frete...</span>
+                      <div class="frete-card frete-card-skeleton" aria-hidden="true"><span class="skeleton skeleton-circulo skeleton-frete-radio"></span><span class="frete-info"><span class="skeleton skeleton-texto medio"></span><span class="skeleton skeleton-texto curto"></span></span><span class="skeleton skeleton-frete-valor"></span></div>
+                      <div class="frete-card frete-card-skeleton" aria-hidden="true"><span class="skeleton skeleton-circulo skeleton-frete-radio"></span><span class="frete-info"><span class="skeleton skeleton-texto medio"></span><span class="skeleton skeleton-texto curto"></span></span><span class="skeleton skeleton-frete-valor"></span></div>
+                    </div>
                     <div id="freteErro" style="display:none;padding:12px;text-align:center;color:var(--cor-vermelho-primario);"></div>
                   </div>
                 </div>

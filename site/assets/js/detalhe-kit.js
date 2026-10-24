@@ -103,8 +103,7 @@ document.addEventListener('DOMContentLoaded', function () {
     return;
   }
 
-  container.innerHTML = '<p class="carregando-produto">Carregando kit...</p>';
-
+  // até a resposta chegar, o container mostra o skeleton que já vem no HTML
   fetch((window.API_BASE_URL || 'http://localhost:3333') + '/api/kits/' + kitId)
     .then(function (r) { return r.json(); })
     .then(function (kit) {

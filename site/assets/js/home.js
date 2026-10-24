@@ -41,7 +41,11 @@ function carregarDados(chave, url, callback) {
     return;
   }
   fetch(url)
-    .then(function (r) { return r.json(); })
+    .then(function (r) {
+      // resposta de erro não vai para o cache: cairia no fallback por 5 minutos
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
     .then(function (dados) {
       localStorage.setItem(chave, JSON.stringify(dados));
       localStorage.setItem(chave + '_tempo', String(Date.now()));
@@ -50,11 +54,10 @@ function carregarDados(chave, url, callback) {
     .catch(function () { callback(null); });
 }
 
+// renderFn também recebe null em caso de erro, para trocar o skeleton pelo fallback
 function observarSecao(el, chave, url, renderFn) {
   if (!el) return;
-  carregarDados(chave, url, function (dados) {
-    if (dados) renderFn(dados);
-  });
+  carregarDados(chave, url, renderFn);
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -101,9 +104,10 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
-      banners.forEach(function (banner, index) {
-        slidesContainer.innerHTML += '<div class="slide"><img src="' + imgUrl(banner.image_url) + '" alt="' + escH(banner.title || 'Slide ' + (index + 1)) + '" decoding="async"></div>';
-      });
+      // atribuição (e não +=) para substituir o skeleton do HTML
+      slidesContainer.innerHTML = banners.map(function (banner, index) {
+        return '<div class="slide"><img src="' + imgUrl(banner.image_url) + '" alt="' + escH(banner.title || 'Slide ' + (index + 1)) + '" decoding="async"></div>';
+      }).join('');
 
       totalSlides = banners.length;
       atualizarCarrossel();
@@ -165,9 +169,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (section) section.style.display = 'none';
       return;
     }
-    produtos.forEach(function (prod) {
-      destaquesSection.innerHTML += renderProductCard(prod);
-    });
+    destaquesSection.innerHTML = produtos.map(renderProductCard).join('');
   }
 
   function renderizarDestaquesWrapper(dados) {
@@ -198,6 +200,7 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
+    var html = '';
     kits.forEach(function (kit) {
       const valorFormatado = Number(kit.price).toFixed(2).replace('.', ',');
       const imgSrc = imgUrl(kit.image_url);
@@ -209,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function () {
           '</ul></div>';
       }
 
-      cartoesSection.innerHTML += '<div class="cartao" data-href="/site/pages/kits/detalhe/index.html?id=' + kit.id + '">' +
+      html += '<div class="cartao" data-href="/site/pages/kits/detalhe/index.html?id=' + kit.id + '">' +
         '<img class="cartao-img" src="' + imgSrc + '" alt="' + escH(kit.name) + '" loading="lazy" decoding="async">' +
         '<h1 class="cartao-h1"><a class="cartao-link" href="/site/pages/kits/detalhe/index.html?id=' + kit.id + '">' + escH(kit.name) + '</a></h1>' +
         '<div class="cartao-valor"><p>R$</p><h3>' + valorFormatado + '</h3></div>' +
@@ -219,6 +222,7 @@ document.addEventListener('DOMContentLoaded', function () {
         '</div>' +
         '</div>';
     });
+    cartoesSection.innerHTML = html;
   }
 
   if (kitsWrapper && cartoesSection) {

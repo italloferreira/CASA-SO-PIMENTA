@@ -1,4 +1,5 @@
 @import url('variaveis.css');
+@import url('skeleton.css');
 
 /* conta.css */
 
@@ -195,6 +196,19 @@ main {
   background: var(--cor-cinza-hover);
   color: var(--cor-cinza-texto-secundario);
   cursor: not-allowed;
+}
+
+/* Skeleton enquanto o perfil carrega: o shorthand "background" acima zera o do .skeleton */
+.campo-conta input.skeleton {
+  background: var(--skeleton-gradiente) var(--skeleton-base) no-repeat;
+  background-size: 200% 100%;
+  border-color: transparent;
+  color: transparent;
+  pointer-events: none;
+}
+
+.campo-conta input.skeleton::placeholder {
+  color: transparent;
 }
 
 .info-cep {

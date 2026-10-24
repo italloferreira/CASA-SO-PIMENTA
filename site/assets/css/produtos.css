@@ -1,4 +1,5 @@
 @import url('variaveis.css');
+@import url('skeleton.css');
 
 * {
     box-sizing: border-box;
@@ -343,6 +344,38 @@ input[type="search"]::-webkit-search-cancel-button {
 .cartao button img{
     width: 20px;
     height: 20px;
+}
+
+/* Skeleton dos cards: mesmas proporções do .cartao real */
+.cartao-skeleton .skeleton-img{
+    width: 100%;
+    height: 60%;
+    border-radius: 0;
+}
+
+.cartao-skeleton .skeleton-titulo{
+    width: 70%;
+    height: 14px;
+}
+
+.cartao-skeleton .skeleton-preco{
+    width: 40%;
+    height: 20px;
+}
+
+.cartao-skeleton .skeleton-botao{
+    width: 95%;
+    height: 10%;
+    margin-bottom: 2.5%;
+    border-radius: 0;
+}
+
+/* Rolagem infinita: a sentinela vira uma linha inteira de cards */
+.skeleton-sentinel{
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
 }
 
 /*footer*/
@@ -999,6 +1032,20 @@ footer p{
 
     .cartao div {
         height: 15%;
+    }
+
+    /* Em coluna, poucos cards de skeleton já preenchem a tela */
+    .skeleton-sentinel {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .skeleton-sentinel .cartao-skeleton:nth-of-type(n+2),
+    .produtos-section > .cartao-skeleton:nth-of-type(n+3) {
+        display: none;
     }
 
     /* Footer */

@@ -64,6 +64,20 @@ document.addEventListener('DOMContentLoaded', function () {
     '</div>';
   }
 
+  // spans em vez de div/p/h3: o .cartao do produtos.css estiliza esses elementos internos
+  function skeletonCartoes(qtd, mensagem) {
+    var html = '<span class="sr-only">' + mensagem + '</span>';
+    for (var i = 0; i < qtd; i++) {
+      html += '<div class="cartao cartao-skeleton" aria-hidden="true">' +
+        '<span class="skeleton skeleton-img"></span>' +
+        '<span class="skeleton skeleton-titulo"></span>' +
+        '<span class="skeleton skeleton-preco"></span>' +
+        '<span class="skeleton skeleton-botao"></span>' +
+      '</div>';
+    }
+    return html;
+  }
+
   function atualizarSentinel() {
     if (sentinel) sentinel.remove();
     if (observer) observer.disconnect();
@@ -72,9 +86,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (allLoaded || termoAtual) return;
 
     sentinel = document.createElement('div');
-    sentinel.className = 'sentinel';
-    sentinel.textContent = 'Carregando mais...';
-    sentinel.style.cssText = 'text-align:center;padding:20px;color:#999;';
+    sentinel.className = 'sentinel skeleton-sentinel';
+    sentinel.innerHTML = skeletonCartoes(4, 'Carregando mais...');
     produtosSection.appendChild(sentinel);
 
     observer = new IntersectionObserver(function (entries) {
@@ -103,11 +116,14 @@ document.addEventListener('DOMContentLoaded', function () {
     loading = true;
 
     if (todosProdutos.length === 0) {
-      produtosSection.innerHTML = '<p>Carregando produtos...</p>';
+      produtosSection.innerHTML = skeletonCartoes(8, 'Carregando produtos...');
     }
 
     fetch(API_BASE + '/api/products?category=' + encodeURIComponent(categoria) + '&limit=20&offset=' + todosProdutos.length)
-      .then(function (r) { return r.json(); })
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
       .then(function (data) {
         todosProdutos = todosProdutos.concat(data.products);
         total = data.total;
@@ -123,7 +139,10 @@ document.addEventListener('DOMContentLoaded', function () {
           produtosSection.innerHTML = '<p>Não foi possível carregar os produtos.</p>';
         }
         loading = false;
-        atualizarSentinel();
+        // sem recriar a sentinela: visível, ela dispararia o observer na hora e
+        // repetiria a requisição em loop enquanto a API estiver fora
+        if (sentinel) sentinel.remove();
+        if (observer) observer.disconnect();
       });
   }
 
@@ -160,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (locais.length > 0) {
       renderizarProdutos(locais);
     } else {
-      produtosSection.innerHTML = '<p>Buscando...</p>';
+      produtosSection.innerHTML = skeletonCartoes(4, 'Buscando...');
     }
 
     // senão, busca no servidor os produtos desta categoria que ainda não foram carregados

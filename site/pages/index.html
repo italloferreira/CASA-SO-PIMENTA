@@ -186,7 +186,9 @@
                 </button>
 
                 <div class="carrossel">
-                    <div class="slides" id="slides"></div>
+                    <div class="slides" id="slides">
+                        <div class="slide" aria-hidden="true"><span class="skeleton skeleton-slide"></span></div>
+                    </div>
                 </div>
 
                 <button class="seta seta-direita" id="proximo">
@@ -197,12 +199,22 @@
 
         <section class="conteiner-cartao destaques-section">
             <h1 class="titulo">Produtos em destaque</h1>
-            <section class="cartoes-section" id="destaques-section"></section>
+            <section class="cartoes-section" id="destaques-section">
+                <p class="sr-only">Carregando produtos em destaque...</p>
+                <div class="cartao cartao-skeleton" aria-hidden="true"><span class="skeleton skeleton-img"></span><span class="skeleton skeleton-titulo"></span><span class="skeleton skeleton-preco"></span><span class="skeleton skeleton-botao"></span></div>
+                <div class="cartao cartao-skeleton" aria-hidden="true"><span class="skeleton skeleton-img"></span><span class="skeleton skeleton-titulo"></span><span class="skeleton skeleton-preco"></span><span class="skeleton skeleton-botao"></span></div>
+                <div class="cartao cartao-skeleton" aria-hidden="true"><span class="skeleton skeleton-img"></span><span class="skeleton skeleton-titulo"></span><span class="skeleton skeleton-preco"></span><span class="skeleton skeleton-botao"></span></div>
+            </section>
         </section>
 
         <section class="conteiner-cartao">
             <h1 class="titulo">Novidades / Kits naturais</h1>
-            <section class="cartoes-section" id="cartoes-section"></section>
+            <section class="cartoes-section" id="cartoes-section">
+                <p class="sr-only">Carregando kits...</p>
+                <div class="cartao cartao-skeleton" aria-hidden="true"><span class="skeleton skeleton-img"></span><span class="skeleton skeleton-titulo"></span><span class="skeleton skeleton-preco"></span><span class="skeleton skeleton-botao"></span></div>
+                <div class="cartao cartao-skeleton" aria-hidden="true"><span class="skeleton skeleton-img"></span><span class="skeleton skeleton-titulo"></span><span class="skeleton skeleton-preco"></span><span class="skeleton skeleton-botao"></span></div>
+                <div class="cartao cartao-skeleton" aria-hidden="true"><span class="skeleton skeleton-img"></span><span class="skeleton skeleton-titulo"></span><span class="skeleton skeleton-preco"></span><span class="skeleton skeleton-botao"></span></div>
+            </section>
         </section>
     </main>
 

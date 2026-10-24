@@ -1,4 +1,5 @@
 @import url('variaveis.css');
+@import url('skeleton.css');
 
 * { box-sizing: border-box; border: 0; margin: 0; font-family: var(--font-principal); }
 
@@ -92,6 +93,15 @@ main { padding-top: 14vh; padding-bottom: 6vh; width: 100%; min-height: 100vh; d
 
 /* ── Loading ── */
 .pedidos-loading { text-align: center; padding: 60px 0; color: var(--cor-cinza-texto-secundario); font-size: 15px; }
+
+/* ── Skeleton (mesma estrutura dos cards reais) ── */
+.skeleton-pedido-numero { width: 45%; height: 18px; }
+.skeleton-pedido-info { width: 120px; }
+.skeleton-pedido-total { width: 80px; height: 20px; }
+.skeleton-badge { width: 96px; height: 24px; border-radius: 20px; }
+.skeleton-detalhe-pedido-titulo { width: 50%; height: 28px; }
+.skeleton-detalhe-card-titulo { width: 30%; margin-bottom: 16px; }
+.skeleton-timeline { height: 56px; margin: 32px 0 20px; }
 
 /* ── Detalhe do pedido ── */
 .detalhe-container { width: 90%; max-width: 720px; }

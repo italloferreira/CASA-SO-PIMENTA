@@ -1,0 +1,68 @@
+/* ============================================
+   Casa Só Pimenta — Skeleton Screen
+   Placeholders exibidos enquanto o conteúdo da API carrega.
+   O layout de cada skeleton fica no CSS da página que o usa.
+   ============================================ */
+
+:root {
+  --skeleton-base: var(--cor-cinza-borda);
+  --skeleton-brilho: var(--cor-cinza-hover);
+  --skeleton-gradiente: linear-gradient(90deg, transparent 0%, var(--skeleton-brilho) 50%, transparent 100%);
+}
+
+.skeleton {
+  display: block;
+  background-color: var(--skeleton-base);
+  background-image: var(--skeleton-gradiente);
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  border-radius: 6px;
+  animation: skeleton-brilho 1.4s ease-in-out infinite;
+}
+
+@keyframes skeleton-brilho {
+  0%   { background-position: 150% 0; }
+  100% { background-position: -50% 0; }
+}
+
+/* ── Formas ── */
+.skeleton-texto {
+  width: 100%;
+  height: 14px;
+}
+
+.skeleton-texto.curto { width: 40%; }
+.skeleton-texto.medio { width: 65%; }
+
+.skeleton-circulo {
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Cards de skeleton não são clicáveis */
+.cartao-skeleton,
+.pedido-card-skeleton,
+.frete-card-skeleton {
+  cursor: default;
+  pointer-events: none;
+}
+
+/* Texto lido apenas por leitores de tela */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+    background-image: none;
+  }
+}

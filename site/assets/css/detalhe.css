@@ -1,4 +1,5 @@
 @import url('variaveis.css');
+@import url('skeleton.css');
 
 /* produto.css — página de detalhe do produto */
 
@@ -247,6 +248,31 @@ main {
   border-color: var(--cor-vermelho-primario);
 }
 
+/* Skeleton: mesma estrutura do .produto-detalhe-card real */
+.skeleton-detalhe-img {
+  flex: 1;
+  max-width: 480px;
+  height: 550px;
+  border-radius: 12px;
+}
+
+.skeleton-detalhe-titulo {
+  width: 80%;
+  height: 36px;
+}
+
+.skeleton-detalhe-preco {
+  width: 30%;
+  height: 32px;
+}
+
+.skeleton-detalhe-botao {
+  width: 100%;
+  max-width: 460px;
+  height: 48px;
+  border-radius: 8px;
+}
+
 /* Info */
 .produto-detalhe-info {
   flex: 1;
@@ -432,7 +458,6 @@ main {
 }
 
 /* Estados de carregamento/erro */
-.carregando-produto,
 .erro-produto {
   font-size: 18px;
   color: var(--cor-cinza-texto-secundario);
@@ -766,6 +791,14 @@ footer p {
   }
 
   .produto-acoes {
+    max-width: 100%;
+  }
+
+  /* em coluna o skeleton não tem conteúdo que defina largura/altura */
+  .skeleton-detalhe-img,
+  .produto-detalhe-skeleton .produto-detalhe-info {
+    flex: none;
+    width: 100%;
     max-width: 100%;
   }
 

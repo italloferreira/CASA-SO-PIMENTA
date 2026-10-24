@@ -89,8 +89,7 @@
       return;
     }
 
-    lista.innerHTML = '<div class="pedidos-loading">Carregando pedidos...</div>';
-
+    // até a resposta chegar, a lista mostra o skeleton que já vem no HTML
     fetch(API + '/api/orders/my', {
       headers: Object.assign({ 'Content-Type': 'application/json' }, getAuthHeaders()),
       credentials: 'include'

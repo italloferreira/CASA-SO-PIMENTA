@@ -106,6 +106,23 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
+  /* Campos preenchidos pelo perfil ficam em skeleton (e travados) até a resposta chegar */
+  var camposPerfil = ['telefone', 'cep', 'endereco', 'cidade', 'estado']
+    .map(function (id) { return document.getElementById(id); })
+    .filter(Boolean);
+
+  camposPerfil.forEach(function (campo) {
+    campo.classList.add('skeleton');
+    campo.readOnly = true;
+  });
+
+  function liberarCamposPerfil() {
+    camposPerfil.forEach(function (campo) {
+      campo.classList.remove('skeleton');
+      campo.readOnly = false;
+    });
+  }
+
   /* Carrega perfil completo da API */
   fetch(API_BASE + '/api/auth/profile', {
     headers: getAuthHeaders(),
@@ -124,7 +141,8 @@ document.addEventListener('DOMContentLoaded', function () {
       if (perfil.city && document.getElementById('cidade')) document.getElementById('cidade').value = perfil.city;
       if (perfil.state && document.getElementById('estado')) document.getElementById('estado').value = perfil.state;
     })
-    .catch(function () {});
+    .catch(function () {})
+    .finally(liberarCamposPerfil);
 
   /* Salvar alterações */
   var btnSalvar = document.getElementById('btnSalvar');

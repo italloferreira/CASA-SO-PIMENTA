@@ -1,4 +1,5 @@
 @import url('variaveis.css');
+@import url('skeleton.css');
 
 *{
     box-sizing: border-box;
@@ -411,6 +412,36 @@ main{
 .cartao-img{
     width: 100%;
     height: 50%;
+}
+
+/* Skeleton dos cards: mesmas proporções do .cartao real */
+.cartao-skeleton .skeleton-img{
+    width: 100%;
+    height: 50%;
+    border-radius: 0;
+}
+
+.cartao-skeleton .skeleton-titulo{
+    width: 70%;
+    height: 18px;
+}
+
+.cartao-skeleton .skeleton-preco{
+    width: 40%;
+    height: 8%;
+}
+
+.cartao-skeleton .skeleton-botao{
+    width: 95%;
+    height: 12%;
+    margin-bottom: 2%;
+    border-radius: 0;
+}
+
+.skeleton-slide{
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
 }
 
 .cartao-h1{
@@ -1065,6 +1096,10 @@ footer p{
 
     .cartao-img {
         width: 100%;
+        height: 45%;
+    }
+
+    .cartao-skeleton .skeleton-img {
         height: 45%;
     }
 

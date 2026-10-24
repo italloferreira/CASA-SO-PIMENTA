@@ -1,4 +1,5 @@
 @import url('variaveis.css');
+@import url('skeleton.css');
 
 * {
   box-sizing: border-box;
@@ -440,6 +441,23 @@ main {
 
 .frete-info {
   flex: 1;
+}
+
+/* Skeleton das opções de frete (enquanto calcula) */
+.skeleton-frete-radio {
+  width: 20px;
+  height: 20px;
+}
+
+.frete-card-skeleton .frete-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.skeleton-frete-valor {
+  width: 70px;
+  height: 18px;
 }
 
 .frete-info strong {

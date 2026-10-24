@@ -254,8 +254,7 @@
       return;
     }
 
-    conteudo.innerHTML = '<div class="pedidos-loading">Carregando detalhes do pedido...</div>';
-
+    // até a resposta chegar, o conteúdo mostra o skeleton que já vem no HTML
     fetch(API + '/api/orders/my/' + pedidoId, {
       headers: Object.assign({ 'Content-Type': 'application/json' }, getAuthHeaders()),
       credentials: 'include'

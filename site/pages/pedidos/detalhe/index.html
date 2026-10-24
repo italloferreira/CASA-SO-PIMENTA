@@ -173,7 +173,25 @@
   <main>
     <div class="detalhe-container">
       <a href="/site/pages/pedidos/index.html" class="btn-voltar">&larr; Voltar para Meus Pedidos</a>
-      <div id="detalheConteudo"></div>
+      <div id="detalheConteudo">
+        <p class="sr-only">Carregando detalhes do pedido...</p>
+        <div aria-hidden="true">
+          <div class="detalhe-header">
+            <span class="detalhe-header-topo"><span class="skeleton skeleton-detalhe-pedido-titulo"></span><span class="skeleton skeleton-badge"></span></span>
+            <span class="skeleton skeleton-texto curto"></span>
+          </div>
+          <div class="detalhe-card">
+            <span class="skeleton skeleton-texto skeleton-detalhe-card-titulo"></span>
+            <span class="skeleton skeleton-timeline"></span>
+          </div>
+          <div class="detalhe-card">
+            <span class="skeleton skeleton-texto skeleton-detalhe-card-titulo"></span>
+            <span class="item-linha"><span class="skeleton skeleton-texto medio"></span><span class="skeleton skeleton-texto skeleton-pedido-total"></span></span>
+            <span class="item-linha"><span class="skeleton skeleton-texto medio"></span><span class="skeleton skeleton-texto skeleton-pedido-total"></span></span>
+            <span class="item-linha"><span class="skeleton skeleton-texto medio"></span><span class="skeleton skeleton-texto skeleton-pedido-total"></span></span>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
 
