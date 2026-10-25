@@ -153,6 +153,24 @@ document.addEventListener('DOMContentLoaded', function () {
       slidesWrapper.addEventListener('mouseleave', function () {
         iniciarAutoPlay();
       });
+
+      // arrastar com o dedo troca de slide; gesto mais vertical que horizontal é rolagem da página
+      var toqueX = null;
+      var toqueY = null;
+
+      slidesWrapper.addEventListener('touchstart', function (e) {
+        toqueX = e.touches[0].clientX;
+        toqueY = e.touches[0].clientY;
+      }, { passive: true });
+
+      slidesWrapper.addEventListener('touchend', function (e) {
+        if (toqueX === null) return;
+        var dx = e.changedTouches[0].clientX - toqueX;
+        var dy = e.changedTouches[0].clientY - toqueY;
+        toqueX = null;
+        if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+        (dx < 0 ? btnProximo : btnAnterior).click();
+      }, { passive: true });
     }
 
     iniciarAutoPlay();
