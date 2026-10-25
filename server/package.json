@@ -6,7 +6,8 @@
   "scripts": {
     "test": "node --test",
     "dev": "nodemon src/server.js",
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "email:teste": "node enviar-email-teste.mjs"
   },
   "keywords": [],
   "author": "",
