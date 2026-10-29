@@ -34,6 +34,7 @@ test('CSS: a seção não tem mais altura fixa de 100vh e desconta o cabeçalho 
 test('CSS: a imagem preenche a caixa e o slide ocupa a largura inteira', () => {
   assert.match(regra(DESKTOP, '.slide img'), /object-fit: cover/);
   assert.match(regra(DESKTOP, '.slide'), /min-width: 100%/);
+  assert.match(regra(DESKTOP, '.slide'), /flex: 0 0 100%/, 'sem flex-basis o Safari do iPhone esticava o slide até a largura real da imagem');
 });
 
 test('CSS: no mobile o carrossel aparece (não é mais escondido) e as setas ficam menores', () => {
