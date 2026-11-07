@@ -8,8 +8,9 @@ const SITE_URL = (process.env.SITE_URL || 'https://www.casasopimenta.com.br').re
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const pagesDir = path.resolve(__dirname, '../../../site/pages');
 
-// páginas fora do Google (privadas, de fluxo, redirecionamentos ou montadas por id)
-const EXCLUDED = /^(admin|checkout|conta|login|pedidos|404|produtos\/pimentas|produtos\/detalhe|kits\/detalhe)(\/|$)/;
+// páginas fora do Google (privadas, de fluxo, redirecionamentos ou montadas por id/parâmetro)
+// marcas/ só tem conteúdo com ?marca=; o Google chega em cada marca pelos links da home
+const EXCLUDED = /^(admin|checkout|conta|login|pedidos|404|produtos\/pimentas|produtos\/detalhe|kits\/detalhe|marcas)(\/|$)/;
 
 function listStaticPages(dir, base = '') {
   let entries;

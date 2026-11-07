@@ -34,6 +34,16 @@ window.PAGINAS_CATEGORIA = {
   'vinagres': '/site/pages/produtos/vinagres/index.html'
 };
 
+/* marcas da secao "Marcas que voce encontra aqui" (home) e da pagina /site/pages/marcas/?marca=slug.
+   nome = exatamente o que vem depois do " - " no titulo dos produtos (maiusculas/acentos nao importam).
+   A home lista as mesmas marcas no HTML; um teste confere que as duas listas batem. */
+window.MARCAS = [
+  { slug: 'brasileirissimo', nome: 'Brasileiríssimo', logo: '/site/imgs/marcas/brasileirissimo.webp' },
+  { slug: 'maria-da-fe', nome: 'Maria da Fé', logo: '/site/imgs/marcas/maria-da-fe.webp' },
+  { slug: 'nativa-alimentos', nome: 'Nativa Alimentos', logo: '/site/imgs/marcas/nativa-alimentos.webp' },
+  { slug: 'fogo-mineiro', nome: 'Fogo Mineiro', logo: '/site/imgs/marcas/fogo-mineiro.webp' }
+];
+
 /* Troque a URL de producao antes do deploy */
 var API_BASE_URL = (function () {
   var host = window.location.hostname;

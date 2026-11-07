@@ -71,12 +71,15 @@ test('nenhum outro script do site hardcoda 100g', () => {
       continue;
     }
 
-    if (norm.endsWith('assets/js/produtos.js')) {
-      assert.ok(source.includes('window.CATEGORIAS_GRANEL_100G'), 'produtos.js deve usar a lista granel do config.js');
+    // listagens de cards (categoria e marca) seguem a mesma regra da badge
+    const listagem = ['assets/js/produtos.js', 'assets/js/marca.js'].find((f) => norm.endsWith(f));
+    if (listagem) {
+      const nome = listagem.split('/').pop();
+      assert.ok(source.includes('window.CATEGORIAS_GRANEL_100G'), nome + ' deve usar a lista granel do config.js');
       const ocorrencias100g = source.match(/100g/g) || [];
-      assert.equal(ocorrencias100g.length, 1, 'produtos.js deve conter "100g" apenas na badge condicional (veio ' + ocorrencias100g.length + ')');
+      assert.equal(ocorrencias100g.length, 1, nome + ' deve conter "100g" apenas na badge condicional (veio ' + ocorrencias100g.length + ')');
       assert.ok(source.includes("? '<p class=\"unidade-de-medida\">100g</p>' : ''"),
-        'produtos.js deve renderizar a badge apenas no ternario condicional');
+        nome + ' deve renderizar a badge apenas no ternario condicional');
       continue;
     }
 

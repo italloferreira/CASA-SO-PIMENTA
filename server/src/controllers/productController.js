@@ -1,9 +1,18 @@
 import { pool } from '../database/connection.js';
 import { rankearSemelhantes } from '../utils/similarity.js';
 
+// Marca = trecho depois do último " - " do nome ("Conserva 100g - Nativa Alimentos").
+// Aceita o traço colado na marca ("180g -Nativa") e en/em dash; nome sem traço não tem marca.
+const MARCA_DO_NOME_SQL = `substring(products.name from '\\s[-–—]\\s*([^-–—]+)$')`;
+
+function semAcentoSql(expr) {
+  return `translate(lower(btrim(${expr})), 'áàâãäåéèêëíìîïóòôõöúùûüç', 'aaaaaaeeeeiiiiooooouuuuc')`;
+}
+
 export async function listProducts(req, res) {
   try {
-    const { category, featured, limit, offset } = req.query;
+    const { category, featured, limit, offset, brand } = req.query;
+    const marca = typeof brand === 'string' ? brand.trim() : '';
     const isAdmin = req.user?.role === 'admin';
 
     let conditions = [];
@@ -19,6 +28,12 @@ export async function listProducts(req, res) {
       conditions.push(`products.is_featured = 1`);
     }
 
+    // comparação por igualdade: sem curingas, a marca digitada não "vaza" para outros nomes
+    if (marca) {
+      conditions.push(`${semAcentoSql(MARCA_DO_NOME_SQL)} = ${semAcentoSql(`$${paramIndex++}::text`)}`);
+      params.push(marca);
+    }
+
     if (!isAdmin) {
       conditions.push(`products.is_active = 1`);
     }
@@ -28,8 +43,8 @@ export async function listProducts(req, res) {
     const limitVal = Math.min(Math.max(parseInt(limit) || 20, 1), 1000);
     const offsetVal = Math.max(parseInt(offset) || 0, 0);
 
-    const orderClause = category
-      ? ` ORDER BY translate(lower(products.name), 'áàâãäåéèêëíìîïóòôõöúùûüç', 'aaaaaaeeeeiiiiooooouuuuc') ASC`
+    const orderClause = (category || marca)
+      ?` ORDER BY translate(lower(products.name), 'áàâãäåéèêëíìîïóòôõöúùûüç', 'aaaaaaeeeeiiiiooooouuuuc') ASC`
       : ` ORDER BY products.created_at DESC`;
 
     const countResult = await pool.query(`
