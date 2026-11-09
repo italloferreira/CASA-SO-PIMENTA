@@ -358,11 +358,9 @@ main{
 
 .titulo{
     width: 100%;
-    height: 5vh;
-    padding-left: 5%; 
+    height: 5vh; 
     font-size: 20px;
-    display: flex;
-    align-items: end;
+    text-align: center;
 }
 
 
@@ -1240,33 +1238,37 @@ footer p{
 }
 
 /* ===== Marcas que você encontra aqui ===== */
+/* Largura igual à faixa ocupada pelos cards: 3 colunas de 25% com
+   space-around deixam 25%/6 de sobra em cada ponta -> 100% - 25%/3 */
 .marcas-lista {
     list-style: none;
-    padding: 2% 5% 0;
-    width: 100%;
+    margin: 0 auto;
+    padding: 2% 0 0;
+    width: calc(100% - 25% / 3);
 
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 200px));
-    justify-content: center;
-    gap: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
 }
 
 .marca-item {
     display: block;
-    aspect-ratio: 1 / 1;
-    border-radius: var(--border-radius-lg);
-    border: 1px solid var(--cor-cinza-borda);
+    width: 100%;
     overflow: hidden;
-    background: var(--cor-branco);
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* object-fit: cover nunca distorce: se a proporção da caixa
+   não bater com a do banner, ele corta as bordas (logo fica no centro) */
 .marca-item img {
     display: block;
     width: 100%;
-    height: 100%;
+    height: auto;
+    aspect-ratio: 4 / 1;
     object-fit: cover;
+    object-position: center;
+    transition: transform 0.4s ease, filter 0.4s ease;
 }
 
 .marca-item:hover,
@@ -1275,15 +1277,25 @@ footer p{
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14);
 }
 
+/* zoom leve + escurecer; o overflow: hidden do .marca-item segura o zoom na moldura */
+.marca-item:hover img,
+.marca-item:focus-visible img {
+    transform: scale(1.06);
+    filter: brightness(0.7) saturate(0.85);
+}
+
 .marca-item:focus-visible {
     outline: 3px solid var(--cor-vermelho-primario);
     outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .marca-item { transition: none; }
+    .marca-item,
+    .marca-item img { transition: none; }
     .marca-item:hover,
-    .marca-item:focus-visible { transform: none; }
+    .marca-item:focus-visible,
+    .marca-item:hover img,
+    .marca-item:focus-visible img { transform: none; }
 }
 
 @media (max-width: 1000px) {
@@ -1291,9 +1303,15 @@ footer p{
         height: auto;
     }
 
+    /* mesma largura dos cards no mobile (80%) */
     .marcas-lista {
-        grid-template-columns: repeat(2, minmax(0, 160px));
+        width: 80%;
         gap: 20px;
         padding-top: 20px;
+    }
+
+    /* banner mais alto no celular: corta as laterais, mantém a logo */
+    .marca-item img {
+        aspect-ratio: 5 / 2;
     }
 }
