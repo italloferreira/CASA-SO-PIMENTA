@@ -1,0 +1,51 @@
+/* Botão flutuante do WhatsApp (canto inferior direito, todas as páginas da loja).
+   Criado pelo site-settings.js. z-index 90: fica acima do conteúdo e do cabeçalho,
+   mas abaixo do carrinho lateral e do menu mobile (999/1000), que o cobrem quando abertos. */
+.whatsapp-flutuante {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    /* iPhone sem botão home: não fica embaixo da barra de gestos */
+    right: max(24px, env(safe-area-inset-right));
+    bottom: max(24px, env(safe-area-inset-bottom));
+    z-index: 90;
+
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: block;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.whatsapp-flutuante img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.whatsapp-flutuante:hover,
+.whatsapp-flutuante:focus-visible {
+    transform: scale(1.08);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+.whatsapp-flutuante:focus-visible {
+    outline: 3px solid var(--cor-whatsapp-hover, #1DA851);
+    outline-offset: 3px;
+}
+
+@media (max-width: 1000px) {
+    .whatsapp-flutuante {
+        width: 56px;
+        height: 56px;
+        right: max(16px, env(safe-area-inset-right));
+        bottom: max(16px, env(safe-area-inset-bottom));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .whatsapp-flutuante { transition: none; }
+    .whatsapp-flutuante:hover,
+    .whatsapp-flutuante:focus-visible { transform: none; }
+}

@@ -77,12 +77,60 @@ function applySettings(settings) {
   });
 }
 
+/* ===== Botão flutuante do WhatsApp =====
+   Aparece já com o número padrão (o mesmo do banco) e troca pelo contact_phone
+   das configurações do admin quando elas carregam. Estilos em whatsapp-flutuante.css. */
+var WHATSAPP_PADRAO = '31983143902';
+var WHATSAPP_MENSAGEM = 'Olá! Vim pelo site da Casa Só Pimenta e gostaria de mais informações.';
+
+function linkWhatsApp(telefone) {
+  var nums = String(telefone || '').replace(/\D/g, '');
+  if (nums.length < 10) return '';
+  if (nums.indexOf('55') !== 0 || nums.length <= 11) nums = '55' + nums;
+  return 'https://wa.me/' + nums + '?text=' + encodeURIComponent(WHATSAPP_MENSAGEM);
+}
+
+function criarWhatsAppFlutuante() {
+  if (document.querySelector('.whatsapp-flutuante')) return;
+
+  var css = document.createElement('link');
+  css.rel = 'stylesheet';
+  css.href = '/site/assets/css/whatsapp-flutuante.css';
+  document.head.appendChild(css);
+
+  var a = document.createElement('a');
+  a.className = 'whatsapp-flutuante';
+  a.href = linkWhatsApp(WHATSAPP_PADRAO);
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  a.setAttribute('aria-label', 'Fale conosco pelo WhatsApp');
+  a.title = 'Fale conosco pelo WhatsApp';
+  // escondido até o CSS chegar, para não aparecer sem estilo no meio da página
+  a.style.visibility = 'hidden';
+  css.onload = css.onerror = function () { a.style.visibility = ''; };
+  a.innerHTML = '<img src="/site/imgs/icones/whatsapp-flutuante.webp" alt="" width="128" height="128">';
+  document.body.appendChild(a);
+}
+
+function atualizarWhatsAppFlutuante(telefone) {
+  var a = document.querySelector('.whatsapp-flutuante');
+  var link = linkWhatsApp(telefone);
+  if (a && link) a.href = link;
+}
+
+if (document.body) {
+  criarWhatsAppFlutuante();
+} else {
+  document.addEventListener('DOMContentLoaded', criarWhatsAppFlutuante);
+}
+
 (function () {
   fetch(API + '/api/settings')
     .then(function (r) { return r.json(); })
     .then(function (data) {
       if (data.settings) {
         applySettings(data.settings);
+        atualizarWhatsAppFlutuante(data.settings.contact_phone);
       }
     })
     .catch(function () {});

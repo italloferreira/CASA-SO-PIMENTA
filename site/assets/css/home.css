@@ -358,8 +358,8 @@ main{
 
 .titulo{
     width: 100%;
-    height: 5vh; 
-    font-size: 20px;
+    height: 8vh; 
+    font-size: 25px;
     text-align: center;
 }
 
@@ -1237,51 +1237,54 @@ footer p{
     text-decoration: none;
 }
 
-/* ===== Marcas que você encontra aqui ===== */
-/* Largura igual à faixa ocupada pelos cards: 3 colunas de 25% com
-   space-around deixam 25%/6 de sobra em cada ponta -> 100% - 25%/3 */
+/* ===== Aqui você encontra (logos das marcas) ===== */
+/* Bolinhas com a logo. Desktop: uma linha centralizada; se não couber, quebra e continua centralizada.
+   O tamanho acompanha a tela entre 120px e 160px. */
 .marcas-lista {
+    --marca-gap: clamp(24px, 3vw, 48px);
     list-style: none;
     margin: 0 auto;
-    padding: 2% 0 0;
-    width: calc(100% - 25% / 3);
+    padding: 2% 0 8px;
+    width: 90%;
 
     display: flex;
-    flex-direction: column;
-    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--marca-gap);
+}
+
+.marcas-lista li {
+    flex: 0 0 clamp(120px, 11vw, 160px);
 }
 
 .marca-item {
     display: block;
     width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
     overflow: hidden;
+    background: var(--cor-branco);
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s ease;
 }
 
-/* object-fit: cover nunca distorce: se a proporção da caixa
-   não bater com a do banner, ele corta as bordas (logo fica no centro) */
+/* as imagens já vêm quadradas com a logo centralizada e margem para caber no círculo */
 .marca-item img {
     display: block;
     width: 100%;
-    height: auto;
-    aspect-ratio: 4 / 1;
-    object-fit: cover;
-    object-position: center;
-    transition: transform 0.4s ease, filter 0.4s ease;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
 }
 
 .marca-item:hover,
 .marca-item:focus-visible {
     transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14);
 }
 
-/* zoom leve + escurecer; o overflow: hidden do .marca-item segura o zoom na moldura */
 .marca-item:hover img,
 .marca-item:focus-visible img {
-    transform: scale(1.06);
-    filter: brightness(0.7) saturate(0.85);
+    transform: scale(1.05);
 }
 
 .marca-item:focus-visible {
@@ -1298,20 +1301,93 @@ footer p{
     .marca-item:focus-visible img { transform: none; }
 }
 
+/* Mobile: grade de 3 por linha (a última linha fica centralizada), todas as marcas visíveis
+   sem rolagem lateral. Cada bolinha tem ~90-104px: bem acima dos 48px mínimos de toque. */
 @media (max-width: 1000px) {
     .marcas-section.conteiner-cartao {
         height: auto;
     }
 
-    /* mesma largura dos cards no mobile (80%) */
     .marcas-lista {
-        width: 80%;
-        gap: 20px;
+        --marca-gap: 16px;
+        width: 92%;
         padding-top: 20px;
+        row-gap: 20px;
     }
 
-    /* banner mais alto no celular: corta as laterais, mantém a logo */
-    .marca-item img {
-        aspect-ratio: 5 / 2;
+    .marcas-lista li {
+        flex: 0 0 calc((100% - 2 * var(--marca-gap)) / 3);
+        max-width: 104px;
+    }
+
+    .marca-item:hover,
+    .marca-item:focus-visible {
+        transform: none;
+    }
+}
+
+/* ===== Benefícios (abaixo do carrossel) ===== */
+/* mesma largura do .carrossel-container (90% / 92% no mobile) para alinhar com o banner;
+   4 colunas iguais deixam cada ícone centralizado no seu quarto da faixa */
+.beneficios-section {
+    padding-top: 3%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.beneficios-lista {
+    list-style: none;
+    margin: 0;
+    padding: 28px 0 0;
+    width: 90%;
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.beneficio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    padding: 5%;
+}
+
+.beneficio img {
+    display: block;
+    width: 32px;
+    height: 32px;
+}
+
+.beneficio span {
+    font-family: var(--font-principal);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--cor-preto);
+}
+
+@media (max-width: 1000px) {
+    .beneficios-lista {
+        width: 92%;
+        padding-top: 18px;
+        gap: 6px;
+    }
+
+    .beneficio {
+        gap: 6px;
+    }
+
+    .beneficio img {
+        width: 26px;
+        height: 26px;
+    }
+
+    .beneficio span {
+        font-size: 11px;
     }
 }

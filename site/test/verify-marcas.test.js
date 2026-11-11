@@ -59,7 +59,7 @@ test('home: seção de marcas fica entre "Produtos em destaque" e os Kits', () =
   const kits = html.indexOf('id="cartoes-section"');
   assert.ok(destaques !== -1 && kits !== -1, 'destaques e kits continuam na home');
   assert.ok(destaques < ini && ini < kits, 'ordem: destaques → marcas → kits');
-  assert.ok(html.includes('Marcas que você encontra aqui'));
+  assert.ok(html.includes('Aqui você encontra'));
 });
 
 test('home: links das marcas batem com MARCAS do config.js (mesma ordem, link, logo e alt)', () => {
