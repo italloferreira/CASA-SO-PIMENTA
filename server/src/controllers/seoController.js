@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { pool } from '../database/connection.js';
+import { CATEGORIAS_GRANEL_100G } from '../utils/categorias.js';
 
 const SITE_URL = (process.env.SITE_URL || 'https://www.casasopimenta.com.br').replace(/\/$/, '');
 
@@ -78,8 +79,8 @@ const BRAND = 'Casa Só Pimenta';
 const FEED_MAX_TITLE = 150;
 const FEED_MAX_DESCRIPTION = 5000;
 
-// mesma lista de window.CATEGORIAS_GRANEL_100G (site/assets/js/config.js); o teste confere as duas
-export const CATEGORIAS_GRANEL_100G = ['farinhas', 'castanhas', 'chas', 'sementes', 'liofilizados', 'aveias', 'desidratados', 'cocos', 'graos', 'temperos', 'farofas', 'produtos-de-limpeza', 'sal', 'tira-gostos', 'granjeados', 'acucares'];
+// lista granel mora em utils/categorias.js (também usada pelo catálogo); reexportada aqui para quem já importa daqui
+export { CATEGORIAS_GRANEL_100G };
 
 function escXml(texto) {
   return String(texto)

@@ -5,6 +5,7 @@
   ],
   "rewrites": [
     { "source": "/links", "destination": "/site/pages/links/index.html" },
+    { "source": "/catalogo", "destination": "https://casa-so-pimenta-api.onrender.com/catalogo" },
     { "source": "/sitemap.xml", "destination": "https://casa-so-pimenta-api.onrender.com/api/sitemap.xml" },
     { "source": "/merchant-feed.xml", "destination": "https://casa-so-pimenta-api.onrender.com/api/merchant-feed.xml" }
   ],
