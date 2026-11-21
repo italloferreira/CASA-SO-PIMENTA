@@ -4,6 +4,7 @@
     { "source": "/site/pages/produtos/pimentas/index.html", "destination": "/site/pages/produtos/molhos/index.html", "permanent": true }
   ],
   "rewrites": [
+    { "source": "/links", "destination": "/site/pages/links/index.html" },
     { "source": "/sitemap.xml", "destination": "https://casa-so-pimenta-api.onrender.com/api/sitemap.xml" },
     { "source": "/merchant-feed.xml", "destination": "https://casa-so-pimenta-api.onrender.com/api/merchant-feed.xml" }
   ],
