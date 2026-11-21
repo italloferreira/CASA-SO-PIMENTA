@@ -1,0 +1,454 @@
+@import url('variaveis.css');
+
+/* ================================================
+   CASA SÓ PIMENTA — LINK NA BIO
+   Usa as mesmas variáveis do site (variaveis.css).
+   Aqui ficam só os tokens exclusivos do bio link,
+   todos derivados da paleta do site.
+   ================================================ */
+
+:root {
+    --lb-fundo-escuro: #3E0D0B;                  /* --cor-vermelho-hover mais escuro */
+    --lb-texto: var(--cor-off-white);
+    --lb-texto-suave: rgba(247, 244, 240, 0.7);
+    --lb-texto-apagado: rgba(247, 244, 240, 0.45);
+    --lb-vidro-fundo: rgba(62, 13, 11, 0.22);
+    --lb-vidro-claro: rgba(247, 244, 240, 0.06);
+    --lb-vidro-borda: rgba(247, 244, 240, 0.18);
+    --lb-vidro-blur: 4px;
+    --lb-destaque-verde: #8FB27F;                /* --cor-verde-primario clareado p/ ler no fundo escuro */
+    --lb-borda-card: 28px;
+    --lb-velocidade-fundo: 60s;
+    --lb-tamanho-logo-fundo: clamp(90px, 14vw, 130px);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 32px 16px;
+    font-family: var(--font-principal);
+    color: var(--lb-texto);
+    background:
+        radial-gradient(circle at 50% 0%, var(--cor-vermelho-hover) 0%, var(--lb-fundo-escuro) 75%);
+    background-color: var(--lb-fundo-escuro);
+    overflow-x: hidden;
+}
+
+/* ================================================
+   FUNDO ANIMADO — faixas com o nome da marca
+   ================================================ */
+
+.bg-animado {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+/* bolhas de "calor" que respiram no fundo */
+.bg-animado::before,
+.bg-animado::after {
+    content: "";
+    position: absolute;
+    width: 60vmax;
+    height: 60vmax;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.35;
+    animation: respirar 12s ease-in-out infinite alternate;
+}
+
+.bg-animado::before {
+    background: var(--cor-vermelho-primario);
+    top: -25vmax;
+    left: -20vmax;
+}
+
+.bg-animado::after {
+    background: var(--cor-verde-primario);
+    bottom: -30vmax;
+    right: -25vmax;
+    opacity: 0.18;
+    animation-delay: -6s;
+}
+
+.faixas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200vmax;
+    transform: translate(-50%, -50%) rotate(-14deg);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(50px, 9vh, 100px);
+}
+
+/* cada faixa é uma fileira de logos que desliza sem parar */
+.faixa {
+    display: flex;
+    gap: 40px;
+    width: max-content;
+    animation: deslizar var(--lb-velocidade-fundo) linear infinite;
+    will-change: transform; /* avisa o navegador: anima só a fileira, não cada logo */
+}
+
+.faixa img {
+    width: var(--lb-tamanho-logo-fundo);
+    height: auto;
+    flex-shrink: 0;
+    opacity: 0.12;
+}
+
+/* fileiras alternadas: sentido oposto e logos deslocadas */
+.faixa:nth-child(even) {
+    animation-direction: reverse;
+    animation-duration: calc(var(--lb-velocidade-fundo) * 1.3);
+    margin-left: calc(var(--lb-tamanho-logo-fundo) / 2);
+}
+
+/* textura de grão por cima de tudo */
+.grao {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0.08;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ================================================
+   CARD DE VIDRO
+   ================================================ */
+
+.conteiner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 36px;
+    padding: 40px 24px 28px;
+    border-radius: var(--lb-borda-card);
+    background: var(--lb-vidro-fundo);
+    border: 1px solid var(--lb-vidro-borda);
+    backdrop-filter: blur(var(--lb-vidro-blur));
+    -webkit-backdrop-filter: blur(var(--lb-vidro-blur));
+    box-shadow:
+        0 30px 60px -20px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(247, 244, 240, 0.12);
+}
+
+/* ================================================
+   HEADER — logo com selo girando
+   ================================================ */
+
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.selo {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 20px;
+}
+
+.selo-texto {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    animation: girar 20s linear infinite;
+}
+
+.selo-texto text {
+    font-family: var(--font-principal);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 3.2px;
+    text-transform: uppercase;
+    fill: var(--lb-texto-suave);
+}
+
+.logo {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--lb-texto);
+    border: 3px solid var(--lb-texto);
+    box-shadow: 0 0 0 6px rgba(79, 121, 66, 0.55), 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.titulo {
+    font-family: var(--font-marca);
+    font-size: 34px;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--lb-texto);
+}
+
+.titulo em {
+    font-style: italic;
+    color: var(--lb-destaque-verde);
+}
+
+.sub-titulo {
+    margin-top: 10px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--lb-texto-suave);
+}
+
+.sub-titulo span {
+    color: var(--lb-destaque-verde);
+    padding: 0 6px;
+}
+
+/* ================================================
+   BOTÕES
+   ================================================ */
+
+main {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.botao {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    padding: 10px 16px 10px 10px;
+    border-radius: var(--border-radius-lg);
+    background: var(--lb-vidro-claro);
+    border: 1px solid var(--lb-vidro-borda);
+    color: var(--lb-texto);
+    font-size: var(--fs-botao);
+    font-weight: 500;
+    text-decoration: none;
+    transition: transform 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+
+    /* entrada em cascata */
+    opacity: 0;
+    animation: subir 0.6s cubic-bezier(.2, .8, .2, 1) forwards;
+    animation-delay: calc(0.15s + var(--i) * 0.08s);
+}
+
+/* "calor" que preenche o botão no hover */
+.botao::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(90deg, var(--cor-vermelho-hover), var(--cor-vermelho-primario));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s cubic-bezier(.7, 0, .2, 1);
+}
+
+.botao:hover,
+.botao:focus-visible {
+    transform: translateY(-2px);
+    border-color: transparent;
+    outline: none;
+}
+
+.botao:hover::before,
+.botao:focus-visible::before {
+    transform: scaleX(1);
+}
+
+.botao:focus-visible {
+    box-shadow: 0 0 0 2px var(--lb-texto);
+}
+
+.botao-icone {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border-radius: 11px;
+    background: rgba(247, 244, 240, 0.1);
+    transition: background 0.25s ease;
+}
+
+.botao-icone svg {
+    width: 20px;
+    height: 20px;
+}
+
+.botao-texto {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+}
+
+.botao-texto small {
+    font-size: 11.5px;
+    font-weight: 400;
+    opacity: 0.65;
+}
+
+.botao-seta {
+    width: 18px;
+    height: 18px;
+    opacity: 0.6;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.botao:hover .botao-seta {
+    transform: rotate(45deg);
+    opacity: 1;
+}
+
+.botao:hover .botao-icone {
+    background: rgba(62, 13, 11, 0.3);
+}
+
+/* botão principal — WhatsApp (cor de exceção, igual ao site) */
+.botao--destaque {
+    background: var(--cor-off-white);
+    color: var(--cor-vermelho-hover);
+    border-color: transparent;
+    font-weight: 600;
+    padding-top: 14px;
+    padding-bottom: 14px;
+}
+
+.botao--destaque .botao-icone {
+    background: var(--cor-whatsapp);
+    color: var(--cor-branco);
+}
+
+.botao--destaque::before {
+    background: linear-gradient(90deg, var(--cor-whatsapp-hover), var(--cor-whatsapp));
+}
+
+.botao--destaque:hover,
+.botao--destaque:focus-visible {
+    color: var(--cor-branco);
+}
+
+.botao--destaque:hover .botao-icone {
+    background: var(--cor-off-white);
+    color: var(--cor-whatsapp-hover);
+}
+
+.online {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.online::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--cor-whatsapp);
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6);
+    animation: pulsar 1.8s ease-out infinite;
+}
+
+/* ================================================
+   FOOTER
+   ================================================ */
+
+footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+}
+
+.txt1 {
+    font-family: var(--font-marca);
+    font-size: 20px;
+    font-style: italic;
+    font-weight: 700;
+    color: var(--lb-texto);
+}
+
+.txt1::before,
+.txt1::after {
+    content: "—";
+    color: var(--lb-destaque-verde);
+    padding: 0 10px;
+    font-style: normal;
+}
+
+.txt2 {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--lb-texto-apagado);
+}
+
+/* ================================================
+   ANIMAÇÕES
+   ================================================ */
+
+@keyframes deslizar {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+}
+
+@keyframes girar {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes respirar {
+    from { transform: scale(1) translate(0, 0); }
+    to   { transform: scale(1.15) translate(5vmax, 4vmax); }
+}
+
+@keyframes subir {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulsar {
+    0%   { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6); }
+    100% { box-shadow: 0 0 0 8px rgba(37, 211, 102, 0); }
+}
+
+/* quem desativou animações no celular não vê movimento */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition: none !important;
+    }
+}
