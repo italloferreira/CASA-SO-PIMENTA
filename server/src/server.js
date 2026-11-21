@@ -23,6 +23,7 @@ import melhorEnvioRoutes from './routes/melhorEnvioRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
 import { getMpPublicKey } from './controllers/paymentController.js';
 import { getSitemap, getMerchantFeed } from './controllers/seoController.js';
+import { getCatalogo } from './controllers/catalogoController.js';
 
 import { createTables } from './database/schema.js';
 import { seedDatabase } from './database/seed.js';
@@ -97,6 +98,9 @@ app.get('/api/config/mp-key', getMpPublicKey);
 
 app.get('/api/sitemap.xml', getSitemap);
 app.get('/api/merchant-feed.xml', getMerchantFeed);
+
+// catálogo para imprimir/salvar em PDF (na Vercel, casasopimenta.com.br/catalogo chega aqui por rewrite)
+app.get('/catalogo', getCatalogo);
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const siteDir = path.resolve(__dirname, '../../site');
