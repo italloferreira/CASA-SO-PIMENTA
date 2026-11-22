@@ -97,9 +97,88 @@
   color: var(--color-text-muted);
 }
 
-.form-input:read-only {
+/* só campos com o atributo readonly: ":read-only" também pegava <select> e <input type="color">,
+   que ficavam com cara de desativados */
+.form-input[readonly] {
   background: var(--color-surface-alt);
   color: var(--color-text-muted);
+}
+
+.form-required {
+  color: var(--color-primary);
+}
+
+.form-group--narrow {
+  max-width: 260px;
+}
+
+/* Campo com unidade (R$ / %) grudada */
+.input-group {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  background: var(--color-surface);
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+
+.input-group:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(139,46,0,0.1);
+}
+
+.input-group .form-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.input-group .form-input:focus {
+  box-shadow: none;
+}
+
+.input-group-addon {
+  display: flex;
+  align-items: center;
+  flex: none;
+  padding: 0 12px;
+  background: var(--color-bg);
+  border-right: 1px solid var(--color-border);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.input-group-addon--end {
+  border-right: 0;
+  border-left: 1px solid var(--color-border);
+}
+
+.input-group-addon[hidden] {
+  display: none;
+}
+
+/* Seletor de cor + código hex */
+.color-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.color-field .color-swatch {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  padding: 3px;
+  cursor: pointer;
+}
+
+.color-field .color-hex {
+  width: 140px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 .form-textarea {
@@ -179,6 +258,41 @@
   transform: translateX(18px);
 }
 
+.toggle {
+  flex: none;
+}
+
+.toggle input:focus-visible + .toggle-slider {
+  outline: 2px solid var(--color-text-primary);
+  outline-offset: 2px;
+}
+
+/* verde = ativo, igual ao selo "Ativo" das tabelas */
+.toggle--success input:checked + .toggle-slider {
+  background: var(--color-success);
+}
+
+.toggle-group--divider {
+  gap: 16px;
+  padding-top: 18px;
+  border-top: 1px solid var(--color-border);
+}
+
+.toggle-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.toggle-texto .toggle-label {
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.toggle-texto .form-hint {
+  margin-top: 0;
+}
+
 /* File upload */
 .file-upload {
   border: 2px dashed var(--color-border);
@@ -247,6 +361,7 @@
 
 .form-row .form-group {
   flex: 1;
+  min-width: 0;
 }
 
 @media (max-width: 768px) {

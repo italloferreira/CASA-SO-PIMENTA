@@ -68,57 +68,74 @@
   <!-- MODAL -->
   <div class="modal-overlay" id="modalOverlay"></div>
   <div class="modal" id="modal">
-    <div class="modal-header">
-      <h2 id="modalTitle">Novo Cupom</h2>
-      <button class="modal-close" id="modalClose">&times;</button>
-    </div>
-    <div class="modal-body">
-      <form id="cupomForm">
-        <input type="hidden" id="cupomIndex">
+    <div class="modal-content modal-content--lg" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <h2 id="modalTitle">Novo Cupom</h2>
+        <button type="button" class="modal-close" id="modalClose" aria-label="Fechar">
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <form id="cupomForm" class="modal-form">
+        <div class="modal-body">
+          <input type="hidden" id="cupomIndex">
 
-        <div class="form-group">
-          <label class="form-label" for="cupomCode">Código *</label>
-          <input type="text" class="form-input" id="cupomCode" required style="text-transform:uppercase;">
-        </div>
-
-        <div class="form-row">
           <div class="form-group">
-            <label class="form-label" for="cupomDiscountType">Tipo de desconto *</label>
-            <select class="form-input" id="cupomDiscountType" required>
-              <option value="fixed">Valor fixo (R$)</option>
-              <option value="percentage">Percentual (%)</option>
-            </select>
+            <label class="form-label" for="cupomCode">Código <span class="form-required" aria-hidden="true">*</span></label>
+            <input type="text" class="form-input" id="cupomCode" required placeholder="EX: PIMENTA10" aria-describedby="cupomCodeHint" style="text-transform:uppercase;">
+            <span class="form-hint" id="cupomCodeHint">É o que o cliente digita no checkout.</span>
           </div>
-          <div class="form-group">
-            <label class="form-label" for="cupomDiscount">Valor do desconto *</label>
-            <input type="number" step="0.01" min="0" class="form-input" id="cupomDiscount" required>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="cupomDiscountType">Tipo de desconto <span class="form-required" aria-hidden="true">*</span></label>
+              <select class="form-input" id="cupomDiscountType" required>
+                <option value="fixed">Valor fixo (R$)</option>
+                <option value="percentage">Percentual (%)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cupomDiscount">Valor do desconto <span class="form-required" aria-hidden="true">*</span></label>
+              <div class="input-group">
+                <span class="input-group-addon" id="cupomDiscountPrefix" aria-hidden="true">R$</span>
+                <input type="number" step="0.01" min="0" class="form-input" id="cupomDiscount" required placeholder="0,00">
+                <span class="input-group-addon input-group-addon--end" id="cupomDiscountSuffix" aria-hidden="true" hidden>%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="cupomMinOrder">Pedido mínimo</label>
+              <div class="input-group">
+                <span class="input-group-addon" aria-hidden="true">R$</span>
+                <input type="number" step="0.01" min="0" class="form-input" id="cupomMinOrder" placeholder="Sem mínimo">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cupomMaxUses">Limite de usos</label>
+              <input type="number" step="1" min="0" class="form-input" id="cupomMaxUses" placeholder="Ilimitado">
+            </div>
+          </div>
+
+          <div class="form-group form-group--narrow">
+            <label class="form-label" for="cupomExpires">Data de validade</label>
+            <input type="date" class="form-input" id="cupomExpires" aria-describedby="cupomExpiresHint">
+            <span class="form-hint" id="cupomExpiresHint">Em branco, o cupom não expira.</span>
+          </div>
+
+          <div class="toggle-group toggle-group--divider">
+            <div class="toggle-texto">
+              <label class="toggle-label" for="cupomActive">Cupom ativo</label>
+              <span class="form-hint" id="cupomActiveHint">Desativado, o cupom não pode ser usado.</span>
+            </div>
+            <label class="toggle toggle--success">
+              <input type="checkbox" id="cupomActive" role="switch" checked aria-describedby="cupomActiveHint">
+              <span class="toggle-slider" aria-hidden="true"></span>
+            </label>
           </div>
         </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label" for="cupomMinOrder">Pedido mínimo (R$)</label>
-            <input type="number" step="0.01" min="0" class="form-input" id="cupomMinOrder">
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="cupomMaxUses">Limite de usos</label>
-            <input type="number" step="1" min="0" class="form-input" id="cupomMaxUses">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="cupomExpires">Data de validade</label>
-          <input type="date" class="form-input" id="cupomExpires">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label form-label-inline">
-            <input type="checkbox" id="cupomActive" checked>
-            Ativo
-          </label>
-        </div>
-
-        <div class="form-actions">
+        <div class="modal-footer">
           <button type="button" class="btn btn-secondary" id="modalCancel">Cancelar</button>
           <button type="submit" class="btn btn-primary" id="btnSaveCupom">Salvar</button>
         </div>
@@ -129,11 +146,18 @@
   <!-- CONFIRM -->
   <div class="modal-overlay" id="confirmOverlay"></div>
   <div class="modal confirm-modal" id="confirmModal">
-    <div class="modal-header"><h3>Confirmar exclusão</h3></div>
-    <div class="modal-body"><p id="confirmMessage">Tem certeza?</p></div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" id="confirmCancel">Cancelar</button>
-      <button class="btn btn-danger" id="confirmDelete">Excluir</button>
+    <div class="modal-content" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmMessage">
+      <div class="modal-body">
+        <span class="confirm-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+        </span>
+        <h3 class="confirm-title" id="confirmTitle">Confirmar exclusão</h3>
+        <p class="confirm-text" id="confirmMessage">Tem certeza?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="confirmCancel">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="confirmDelete">Excluir</button>
+      </div>
     </div>
   </div>
 

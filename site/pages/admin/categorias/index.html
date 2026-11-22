@@ -78,33 +78,38 @@
   <!-- MODAL -->
   <div class="modal-overlay" id="modalOverlay"></div>
   <div class="modal" id="modal">
-    <div class="modal-header">
-      <h2 id="modalTitle">Nova Categoria</h2>
-      <button class="modal-close" id="modalClose">&times;</button>
-    </div>
-    <div class="modal-body">
-      <form id="categoriaForm">
-        <input type="hidden" id="categoriaId">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <h2 id="modalTitle">Nova Categoria</h2>
+        <button type="button" class="modal-close" id="modalClose" aria-label="Fechar">
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <form id="categoriaForm" class="modal-form">
+        <div class="modal-body">
+          <input type="hidden" id="categoriaId">
 
-        <div class="form-group">
-          <label class="form-label" for="catName">Nome *</label>
-          <input type="text" class="form-input" id="catName" required>
-        </div>
+          <div class="form-group">
+            <label class="form-label" for="catName">Nome <span class="form-required" aria-hidden="true">*</span></label>
+            <input type="text" class="form-input" id="catName" required placeholder="Ex: Molhos">
+          </div>
 
-        <div class="form-group">
-          <label class="form-label" for="catSlug">Slug</label>
-          <input type="text" class="form-input" id="catSlug" placeholder="Deixe em branco para gerar automático">
-        </div>
+          <div class="form-group">
+            <label class="form-label" for="catSlug">Slug</label>
+            <input type="text" class="form-input" id="catSlug" placeholder="molhos" aria-describedby="catSlugHint">
+            <span class="form-hint" id="catSlugHint">Em branco, é gerado automaticamente a partir do nome.</span>
+          </div>
 
-        <div class="form-group">
-          <label class="form-label" for="catColor">Cor</label>
-          <div style="display:flex;gap:8px;align-items:center;">
-            <input type="color" class="form-input" id="catColor" style="width:48px;height:40px;padding:2px;flex:none;" value="#8B2E00">
-            <input type="text" class="form-input" id="catColorText" style="flex:1;" placeholder="#RRGGBB" value="#8B2E00">
+          <div class="form-group">
+            <label class="form-label" for="catColorText">Cor</label>
+            <div class="color-field">
+              <input type="color" class="form-input color-swatch" id="catColor" value="#8B2E00" aria-label="Escolher cor">
+              <input type="text" class="form-input color-hex" id="catColorText" placeholder="#RRGGBB" value="#8B2E00" maxlength="7">
+            </div>
           </div>
         </div>
 
-        <div class="form-actions">
+        <div class="modal-footer">
           <button type="button" class="btn btn-secondary" id="modalCancel">Cancelar</button>
           <button type="submit" class="btn btn-primary" id="btnSaveCategoria">Salvar</button>
         </div>
@@ -115,11 +120,18 @@
   <!-- CONFIRM -->
   <div class="modal-overlay" id="confirmOverlay"></div>
   <div class="modal confirm-modal" id="confirmModal">
-    <div class="modal-header"><h3>Confirmar exclusão</h3></div>
-    <div class="modal-body"><p id="confirmMessage">Tem certeza?</p></div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" id="confirmCancel">Cancelar</button>
-      <button class="btn btn-danger" id="confirmDelete">Excluir</button>
+    <div class="modal-content" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmMessage">
+      <div class="modal-body">
+        <span class="confirm-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+        </span>
+        <h3 class="confirm-title" id="confirmTitle">Confirmar exclusão</h3>
+        <p class="confirm-text" id="confirmMessage">Tem certeza?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="confirmCancel">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="confirmDelete">Excluir</button>
+      </div>
     </div>
   </div>
 

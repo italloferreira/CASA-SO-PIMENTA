@@ -1,5 +1,6 @@
 import { protectRoute, showToast } from './admin-auth.js';
 import { API_BASE, apiRequest } from '../../../../assets/js/api.js';
+import { ligarFechamentoModal } from './modal-utils.js';
 
 protectRoute();
 
@@ -83,6 +84,11 @@ function closeModal() {
   document.getElementById('modal').classList.remove('active');
 }
 
+function closeConfirm() {
+  document.getElementById('confirmOverlay').classList.remove('active');
+  document.getElementById('confirmModal').classList.remove('active');
+}
+
 window.editCategory = function (id) {
   var c = allCategories.find(function (c) { return c.id === id; });
   if (c) openModal(c);
@@ -131,6 +137,8 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('modalClose').addEventListener('click', closeModal);
   document.getElementById('modalCancel').addEventListener('click', closeModal);
   document.getElementById('modalOverlay').addEventListener('click', closeModal);
+  ligarFechamentoModal(document.getElementById('modal'), closeModal);
+  ligarFechamentoModal(document.getElementById('confirmModal'), closeConfirm);
 
   /* Form submit */
   document.getElementById('categoriaForm').addEventListener('submit', async function (e) {
@@ -170,21 +178,14 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   /* Confirm delete */
-  document.getElementById('confirmCancel').addEventListener('click', function () {
-    document.getElementById('confirmOverlay').classList.remove('active');
-    document.getElementById('confirmModal').classList.remove('active');
-  });
-  document.getElementById('confirmOverlay').addEventListener('click', function () {
-    document.getElementById('confirmOverlay').classList.remove('active');
-    document.getElementById('confirmModal').classList.remove('active');
-  });
+  document.getElementById('confirmCancel').addEventListener('click', closeConfirm);
+  document.getElementById('confirmOverlay').addEventListener('click', closeConfirm);
   document.getElementById('confirmDelete').addEventListener('click', async function () {
     if (!deleteTargetId) return;
     try {
       await apiRequest('DELETE', '/api/categories/' + deleteTargetId);
       showToast('Categoria excluída!');
-      document.getElementById('confirmOverlay').classList.remove('active');
-      document.getElementById('confirmModal').classList.remove('active');
+      closeConfirm();
       await loadCategories();
     } catch (err) {
       showToast('Erro ao excluir categoria.', 'error');

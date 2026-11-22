@@ -109,6 +109,11 @@
   max-height: 90vh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-content--lg {
+  width: 560px;
 }
 
 .modal-header {
@@ -119,7 +124,8 @@
   border-bottom: 1px solid var(--color-border);
 }
 
-.modal-header h3 {
+.modal-header h3,
+.modal-content .modal-header h2 {
   font-size: var(--font-size-lg);
   font-weight: 600;
 }
@@ -152,6 +158,80 @@
   border-top: 1px solid var(--color-border);
 }
 
+/* Cartão do modal: cabeçalho, corpo que rola e rodapé sempre visível.
+   Escopo em .modal-content para não mexer no drawer de clientes, que usa .modal-header/.modal-footer sem cartão. */
+.modal-content .modal-header {
+  gap: 12px;
+  padding: 18px 20px 18px 24px;
+  flex-shrink: 0;
+}
+
+.modal-content .modal-close {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  flex: none;
+}
+
+.modal-close:focus-visible {
+  outline: 2px solid var(--color-text-primary);
+  outline-offset: 2px;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.modal-content .modal-body {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.modal-content .modal-body > :last-child {
+  margin-bottom: 0;
+}
+
+.modal-content .modal-footer {
+  background: #FAF8F5;
+  flex-shrink: 0;
+}
+
+.modal-content .modal-footer .btn {
+  min-height: 40px;
+}
+
+.modal-content .modal-footer .btn-secondary {
+  background: var(--color-surface);
+  border-color: #D6D0C9;
+}
+
+.modal-content .modal-footer .btn-secondary:hover:not(:disabled) {
+  background: var(--color-surface-alt);
+}
+
+.modal-content .form-group {
+  margin-bottom: 18px;
+}
+
+.modal-content .form-label {
+  margin-bottom: 6px;
+}
+
+.modal-content .form-input {
+  min-height: 40px;
+}
+
+.modal-content .form-hint {
+  margin-top: 6px;
+  font-size: 12px;
+}
+
 /* Confirmation modal */
 .confirm-modal .modal-content {
   width: 400px;
@@ -159,13 +239,25 @@
 
 .confirm-modal .modal-body {
   text-align: center;
-  padding: 32px 24px;
+  padding: 32px 24px 24px;
 }
 
 .confirm-modal .confirm-icon {
-  font-size: 40px;
-  margin-bottom: 12px;
-  display: block;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirm-modal .confirm-title {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin-bottom: 6px;
 }
 
 .confirm-modal .confirm-text {
@@ -185,5 +277,40 @@
 }
 
 .confirm-modal .modal-footer .btn {
-  min-width: 100px;
+  min-width: 110px;
+}
+
+/* Celular: o cartão ocupa a tela com 12px de margem, campos e botões maiores */
+@media (max-width: 768px) {
+  .modal:not(.drawer) {
+    padding: 12px;
+  }
+
+  .modal-content,
+  .modal-content--lg {
+    width: 100%;
+    max-width: none;
+    max-height: 100%;
+  }
+
+  .confirm-modal .modal-content {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .modal-content .modal-close {
+    width: 44px;
+    height: 44px;
+  }
+
+  /* 16px evita o zoom automático do iPhone ao tocar no campo */
+  .modal-content .form-input {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .modal-content .modal-footer .btn {
+    flex: 1 1 0;
+    min-height: 44px;
+  }
 }

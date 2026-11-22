@@ -1,5 +1,6 @@
 import { protectRoute, showToast } from './admin-auth.js';
 import { API_BASE, apiRequest, imageUrl } from '../../../../assets/js/api.js';
+import { ligarFechamentoModal } from './modal-utils.js';
 
 protectRoute();
 
@@ -247,6 +248,10 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('confirmModal').classList.remove('active');
   });
   document.getElementById('confirmOverlay').addEventListener('click', function () {
+    document.getElementById('confirmOverlay').classList.remove('active');
+    document.getElementById('confirmModal').classList.remove('active');
+  });
+  ligarFechamentoModal(document.getElementById('confirmModal'), function () {
     document.getElementById('confirmOverlay').classList.remove('active');
     document.getElementById('confirmModal').classList.remove('active');
   });

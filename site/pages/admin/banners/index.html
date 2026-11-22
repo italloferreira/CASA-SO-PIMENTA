@@ -190,11 +190,18 @@
   <!-- CONFIRM MODAL -->
   <div class="modal-overlay" id="confirmOverlay"></div>
   <div class="modal confirm-modal" id="confirmModal">
-    <div class="modal-header"><h3>Confirmar exclusão</h3></div>
-    <div class="modal-body"><p id="confirmMessage">Tem certeza que deseja excluir este banner?</p></div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" id="confirmCancel">Cancelar</button>
-      <button class="btn btn-danger" id="confirmDelete">Excluir</button>
+    <div class="modal-content" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmMessage">
+      <div class="modal-body">
+        <span class="confirm-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+        </span>
+        <h3 class="confirm-title" id="confirmTitle">Confirmar exclusão</h3>
+        <p class="confirm-text" id="confirmMessage">Tem certeza que deseja excluir este banner?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="confirmCancel">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="confirmDelete">Excluir</button>
+      </div>
     </div>
   </div>
 

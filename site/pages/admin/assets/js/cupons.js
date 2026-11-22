@@ -1,5 +1,6 @@
 import { protectRoute, showToast } from './admin-auth.js';
 import { apiRequest } from '../../../../assets/js/api.js';
+import { ligarFechamentoModal } from './modal-utils.js';
 
 protectRoute();
 
@@ -69,13 +70,21 @@ function renderCoupons() {
     '</tr></thead><tbody>' + rows + '</tbody></table>';
 }
 
+/* "R$" antes do valor para desconto fixo, "%" depois para percentual */
+function atualizarUnidadeDesconto() {
+  var percentual = document.getElementById('cupomDiscountType').value === 'percentage';
+  document.getElementById('cupomDiscountPrefix').hidden = percentual;
+  document.getElementById('cupomDiscountSuffix').hidden = !percentual;
+  document.getElementById('cupomDiscount').placeholder = percentual ? '10' : '0,00';
+}
+
 function openModal(id) {
   document.getElementById('modalOverlay').classList.add('active');
   document.getElementById('modal').classList.add('active');
 
   if (id) {
     var c = coupons.find(function (x) { return x.id === id; });
-    if (!c) return;
+    if (!c) { atualizarUnidadeDesconto(); return; }
     document.getElementById('modalTitle').textContent = 'Editar Cupom';
     document.getElementById('cupomIndex').value = id;
     document.getElementById('cupomCode').value = c.code;
@@ -91,11 +100,17 @@ function openModal(id) {
     document.getElementById('cupomIndex').value = '';
     document.getElementById('cupomActive').checked = true;
   }
+  atualizarUnidadeDesconto();
 }
 
 function closeModal() {
   document.getElementById('modalOverlay').classList.remove('active');
   document.getElementById('modal').classList.remove('active');
+}
+
+function closeConfirm() {
+  document.getElementById('confirmOverlay').classList.remove('active');
+  document.getElementById('confirmModal').classList.remove('active');
 }
 
 window.editCupom = function (id) { openModal(id); };
@@ -118,6 +133,9 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('modalClose').addEventListener('click', closeModal);
   document.getElementById('modalCancel').addEventListener('click', closeModal);
   document.getElementById('modalOverlay').addEventListener('click', closeModal);
+  ligarFechamentoModal(document.getElementById('modal'), closeModal);
+  ligarFechamentoModal(document.getElementById('confirmModal'), closeConfirm);
+  document.getElementById('cupomDiscountType').addEventListener('change', atualizarUnidadeDesconto);
 
   document.getElementById('cupomForm').addEventListener('submit', function (e) {
     e.preventDefault();
@@ -150,21 +168,14 @@ document.addEventListener('DOMContentLoaded', function () {
       });
   });
 
-  document.getElementById('confirmCancel').addEventListener('click', function () {
-    document.getElementById('confirmOverlay').classList.remove('active');
-    document.getElementById('confirmModal').classList.remove('active');
-  });
-  document.getElementById('confirmOverlay').addEventListener('click', function () {
-    document.getElementById('confirmOverlay').classList.remove('active');
-    document.getElementById('confirmModal').classList.remove('active');
-  });
+  document.getElementById('confirmCancel').addEventListener('click', closeConfirm);
+  document.getElementById('confirmOverlay').addEventListener('click', closeConfirm);
   document.getElementById('confirmDelete').addEventListener('click', function () {
     if (deleteTargetId !== null) {
       apiRequest('DELETE', '/api/coupons/' + deleteTargetId)
         .then(function () {
           showToast('Cupom excluído!');
-          document.getElementById('confirmOverlay').classList.remove('active');
-          document.getElementById('confirmModal').classList.remove('active');
+          closeConfirm();
           deleteTargetId = null;
           loadCoupons();
         })
