@@ -1314,6 +1314,51 @@ footer p { font-size: 15px; color: var(--cor-footer-texto);}
   color: var(--cor-cinza-texto-secundario);
 }
 
+/* ===== AVISO DO FORMULÁRIO DE CARTÃO ===== */
+.aviso-cartao {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.aviso-cartao[hidden] {
+  display: none;
+}
+
+.aviso-cartao--info {
+  background: var(--cor-verde-fundo-claro);
+  color: var(--cor-verde-hover);
+}
+
+.aviso-cartao--erro {
+  background: var(--cor-vermelho-fundo-claro);
+  color: var(--cor-vermelho-hover);
+}
+
+.aviso-cartao-acao {
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid currentColor;
+  border-radius: 6px;
+  background: var(--cor-branco);
+  color: inherit;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.aviso-cartao-acao[hidden] {
+  display: none;
+}
+
 /* ===== WHATSAPP CARD ===== */
 .confirmacao-whatsapp {
   margin-bottom: 24px;

@@ -318,6 +318,7 @@ window.selecionarTipoEntrega = function (tipo) {
   }
 
   atualizarResumo();
+  prepararFormularioCartao();
 };
 
 function calcularFreteDaAPI(cep) {
@@ -415,18 +416,25 @@ window.aplicarCupom = function () {
     .then(function (data) {
       if (!data.success) throw new Error(data.message || 'Cupom inválido.');
       cupomAplicado = data.coupon;
+      // pagamento online precisa de um valor a cobrar: cupom que zera o total não é aceito
+      if (getTotalFinal() <= 0) throw new Error(MSG_CUPOM_COBRE_TUDO);
       statusEl.className = 'cupom-status success';
       statusEl.textContent = 'Cupom aplicado: ' + codigo + ' (' + (data.coupon.discount_type === 'percentage' ? data.coupon.discount_value + '%' : 'R$ ' + Number(data.coupon.discount_value).toFixed(2).replace('.', ',')) + ')';
       input.readOnly = true;
       btn.textContent = 'Remover';
       btn.onclick = removerCupom;
       atualizarResumo();
-      sincronizarCardFormComTotal();
+      return true;
     })
     .catch(function (err) {
       cupomAplicado = null;
       statusEl.className = 'cupom-status error';
       statusEl.textContent = err.message || 'Erro ao validar cupom.';
+      return false;
+    })
+    .then(function (aplicado) {
+      // fora da validação do cupom: um problema no formulário do cartão nunca desfaz o cupom
+      if (aplicado) prepararFormularioCartao();
     })
     .finally(function () {
       btn.disabled = false;
@@ -445,7 +453,7 @@ function removerCupom() {
   btn.textContent = 'Aplicar';
   btn.onclick = aplicarCupom;
   atualizarResumo();
-  sincronizarCardFormComTotal();
+  prepararFormularioCartao();
 }
 
 window.selecionarFrete = function (el) {
@@ -460,7 +468,7 @@ window.selecionarFrete = function (el) {
     box: el.getAttribute('data-box')
   };
   atualizarResumo();
-  sincronizarCardFormComTotal();
+  prepararFormularioCartao();
 };
 
 function validarEtapa2() {
@@ -508,17 +516,8 @@ window.selecionarPagamento = function (el) {
   document.getElementById('detalhesCartao').style.display = metodoPagamento === 'cartao' ? '' : 'none';
 
 
-  if (metodoPagamento === 'cartao') {
-    if (!cardForm) {
-      iniciarCardForm();
-    } else {
-      cardForm.unmount();
-      cardForm.mount();
-      cardFormMountedAmount = getTotalFinal();
-    }
-  }
-
   atualizarResumo();
+  prepararFormularioCartao();
 };
 
 function validarEtapa3() {
@@ -564,12 +563,8 @@ window.proximaEtapa = function () {
   if (etapaAtual === 3) {
     document.getElementById('btnProximaEtapa').style.display = 'none';
     document.getElementById('btnConfirmarPedido').disabled = false;
-    setTimeout(function () {
-      if (metodoPagamento === 'cartao' && cardForm) {
-        cardFormMountedAmount = getTotalFinal();
-        cardForm.mount();
-      }
-    }, 100);
+    // espera a etapa 3 ficar visível; não remonta um formulário que já está montado
+    setTimeout(prepararFormularioCartao, 100);
   }
 
   atualizarResumo();
@@ -733,8 +728,18 @@ window.confirmarPedido = function () {
     if (!continuar) return;
   }
 
-  if (metodoPagamento === 'cartao' && cardForm) {
-    cardForm.submit();
+  if (getTotalFinal() <= 0) {
+    mostrarErroInline(MSG_TOTAL_ZERO);
+    return;
+  }
+
+  if (metodoPagamento === 'cartao') {
+    if (cardForm) {
+      cardForm.submit();
+    } else {
+      prepararFormularioCartao({ forcar: true });
+      mostrarErroInline('O formulário do cartão não está pronto. Confira os dados do cartão e tente de novo.');
+    }
     return;
   }
 
@@ -1056,6 +1061,8 @@ function inicializarMercadoPago() {
 
       mpPublicKey = data.publicKey;
       mp = new MercadoPago(data.publicKey, { locale: 'pt-BR' });
+      // o cliente pode ter escolhido cartão antes de o Mercado Pago terminar de carregar
+      prepararFormularioCartao();
     })
     .catch(function (err) {
       console.warn('Erro ao carregar chave do Mercado Pago:', err);
@@ -1065,16 +1072,99 @@ function inicializarMercadoPago() {
 var cardBin = '';
 var cardPaymentMethodId = '';
 var cardFormMountedAmount = 0;
+/* cada formulário criado recebe um número; callbacks de formulários antigos são ignorados */
+var cardFormGeracao = 0;
 
-function sincronizarCardFormComTotal() {
-  if (metodoPagamento !== 'cartao' || !cardForm || etapaAtual !== 3) return;
-  var novoTotal = getTotalFinal();
-  if (cardFormMountedAmount !== novoTotal) {
-    cardFormMountedAmount = novoTotal;
-    cardForm.unmount();
-    cardForm.mount();
+var MSG_CUPOM_COBRE_TUDO = 'Este cupom cobre todo o valor do pedido e não pode ser usado no pagamento online.';
+var MSG_TOTAL_ZERO = 'O total do pedido ficou em R$ 0,00 com o cupom, e o pagamento online precisa de um valor a cobrar. Remova o cupom para continuar.';
+var MSG_CARTAO_FALHOU = 'Não foi possível carregar o formulário do cartão.';
+var MSG_CARTAO_CARREGANDO = 'O pagamento com cartão ainda está carregando.';
+
+function emCentavos(valor) {
+  return Math.round(Number(valor) * 100);
+}
+
+function mostrarAvisoCartao(texto, tipo, comBotaoTentar) {
+  var aviso = document.getElementById('avisoCartao');
+  if (!aviso) return;
+  document.getElementById('avisoCartaoTexto').textContent = texto;
+  aviso.className = 'aviso-cartao aviso-cartao--' + tipo;
+  aviso.hidden = false;
+  var btn = document.getElementById('btnRecarregarCartao');
+  if (btn) btn.hidden = !comBotaoTentar;
+}
+
+function esconderAvisoCartao() {
+  var aviso = document.getElementById('avisoCartao');
+  if (aviso) aviso.hidden = true;
+}
+
+function mostrarCamposCartao(visivel) {
+  var form = document.getElementById('form-checkout');
+  if (form) form.style.display = visivel ? '' : 'none';
+}
+
+/* Remove o formulário atual do Mercado Pago. Uma falha ao desmontar não pode travar o checkout. */
+function descartarFormularioCartao() {
+  if (!cardForm) return;
+  var antigo = cardForm;
+  cardForm = null;
+  cardFormMountedAmount = 0;
+  cardFormGeracao++;
+  try {
+    antigo.unmount();
+  } catch (e) {
+    console.warn('MP cardForm unmount:', e);
   }
 }
+
+/* Único ponto que cria, recria ou remove o formulário do cartão.
+   O cardForm do Mercado Pago guarda o valor de quando foi criado e não aceita ser remontado
+   (unmount + mount na mesma instância apaga os campos): quando o total muda, a instância antiga
+   é descartada e outra é criada com o valor novo. Nunca lança erro para quem chama. */
+function prepararFormularioCartao(opcoes) {
+  var forcar = !!(opcoes && opcoes.forcar);
+  try {
+    if (metodoPagamento !== 'cartao' || etapaAtual !== 3) return;
+
+    if (!mp) {
+      mostrarCamposCartao(false);
+      mostrarAvisoCartao(MSG_CARTAO_CARREGANDO, 'erro', true);
+      return;
+    }
+
+    var total = getTotalFinal();
+    if (total <= 0) {
+      descartarFormularioCartao();
+      mostrarCamposCartao(false);
+      mostrarAvisoCartao(MSG_TOTAL_ZERO, 'erro', false);
+      return;
+    }
+
+    // mesmo valor: mantém o formulário (e o que o cliente já digitou)
+    if (cardForm && !forcar && emCentavos(cardFormMountedAmount) === emCentavos(total)) return;
+
+    var valorAnterior = cardForm ? cardFormMountedAmount : null;
+    descartarFormularioCartao();
+    criarFormularioCartao(total);
+    mostrarCamposCartao(true);
+
+    if (valorAnterior !== null && emCentavos(valorAnterior) !== emCentavos(total)) {
+      mostrarAvisoCartao('O total mudou para ' + formatarPreco(total) + '. Digite os dados do cartão novamente.', 'info', false);
+    } else {
+      esconderAvisoCartao();
+    }
+  } catch (e) {
+    console.warn('MP cardForm:', e);
+    descartarFormularioCartao();
+    mostrarCamposCartao(false);
+    mostrarAvisoCartao(MSG_CARTAO_FALHOU, 'erro', true);
+  }
+}
+
+window.recarregarFormularioCartao = function () {
+  prepararFormularioCartao({ forcar: true });
+};
 
 function detectPaymentMethodId(bin) {
   if (!bin || bin.length < 3) return '';
@@ -1086,10 +1176,13 @@ function detectPaymentMethodId(bin) {
   return '';
 }
 
-function iniciarCardForm() {
-  if (!mp) return;
+/* Cria uma instância NOVA do cardForm com o valor informado. Use prepararFormularioCartao(). */
+function criarFormularioCartao(total) {
+  var geracao = ++cardFormGeracao;
+  var instancia = null;
+  cardBin = '';
+  cardPaymentMethodId = '';
 
-  var total = getTotalFinal();
   var installmentsSelect = document.getElementById('form-checkout__installments');
   if (installmentsSelect) {
     installmentsSelect.innerHTML = '';
@@ -1102,7 +1195,7 @@ function iniciarCardForm() {
   }
 
   var cardFormOptions = {
-    amount: String(total),
+    amount: (Math.round(total * 100) / 100).toFixed(2),
     iframe: true,
     form: {
       id: 'form-checkout',
@@ -1118,16 +1211,25 @@ function iniciarCardForm() {
     },
     callbacks: {
       onFormMounted: function (error) {
-        if (error) console.warn('MP cardForm mount error:', error);
+        if (geracao !== cardFormGeracao || !error) return;
+        console.warn('MP cardForm mount error:', error);
+        // pode chegar durante a criação (cardForm ainda vazio) ou depois dela
+        if (cardForm) descartarFormularioCartao();
+        else cardFormGeracao++;
+        mostrarCamposCartao(false);
+        mostrarAvisoCartao(MSG_CARTAO_FALHOU, 'erro', true);
       },
       onBinChange: function (bin) {
+        if (geracao !== cardFormGeracao) return;
         cardBin = bin;
         cardPaymentMethodId = detectPaymentMethodId(bin);
       },
       onSubmit: function (event) {
         event.preventDefault();
+        // formulário antigo que não foi desmontado direito: nunca envia pagamento
+        if (geracao !== cardFormGeracao) return;
         if (isSubmitting) return;
-        var formData = cardForm.getCardFormData();
+        var formData = instancia.getCardFormData();
         console.log('cardForm data:', JSON.stringify(formData));
         var cpf = document.getElementById('inputCpf').value.replace(/\D/g, '');
         var email = document.getElementById('inputEmail').value.trim();
@@ -1171,7 +1273,13 @@ function iniciarCardForm() {
     }
   };
 
-  cardForm = mp.cardForm(cardFormOptions);
+  instancia = mp.cardForm(cardFormOptions);
+  if (geracao !== cardFormGeracao) {
+    // o Mercado Pago avisou erro de montagem durante a criação: essa instância já foi descartada
+    try { instancia.unmount(); } catch (e) { /* já descartada */ }
+    throw new Error('MP cardForm falhou ao montar');
+  }
+  cardForm = instancia;
   cardFormMountedAmount = total;
 }
 

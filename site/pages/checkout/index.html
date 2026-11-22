@@ -458,6 +458,10 @@
 
                 <!-- Cartão detalhes -->
                 <div class="pagamento-detalhes" id="detalhesCartao" style="display:none;">
+                  <div class="aviso-cartao" id="avisoCartao" role="status" aria-live="polite" hidden>
+                    <span id="avisoCartaoTexto"></span>
+                    <button type="button" class="aviso-cartao-acao" id="btnRecarregarCartao" onclick="recarregarFormularioCartao()" hidden>Tentar de novo</button>
+                  </div>
                   <form id="form-checkout">
                     <div class="campo-grupo">
                       <label for="form-checkout__cardNumber">Número do cartão *</label>
